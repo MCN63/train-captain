@@ -276,7 +276,7 @@
     color:var(--muted);
     font-size:11px;
     flex-shrink:0;
-    width:32px;
+    width:68px;
   }
   .history-item .h-main{
     font-weight:500;
@@ -666,7 +666,7 @@ function render(){
       <p class="month-label">${monthLabel(key)}</p>
       ${items.map(h => `
         <div class="history-item">
-          <span class="h-date">${escapeHtml(h.date.slice(8))}일</span>
+          <span class="h-date">${escapeHtml(h.date)}</span>
           <div style="flex:1; padding:0 10px;">
             <span class="h-main">${escapeHtml(h.captainId)}</span>
             ${h.companionId ? `<span style="color:var(--muted)"> → ${escapeHtml(h.companionId)}</span>` : ''}
