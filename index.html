@@ -478,7 +478,7 @@ let cycleCount = 0;     // 이번 순환에서 기차장이 몇 번 확정됐는
 let history = [];      // [{date, captainId, companionId}]
 let lottoHistory = []; // [{date, winners:[...]}]
 let lastError = null;
-let historyExpanded = false;
+let historyExpanded = true;
 let lottoExpanded = false;
 const EDIT_PIN = 'Ubd63';
 let isUnlocked = false;
@@ -767,7 +767,7 @@ function render(){
       ${isUnlocked && lottoHistory.length ? `<button class="btn-ghost" id="resetLottoBtn" style="width:100%; margin-top:14px; border-color:rgba(255,255,255,0.25); color:#fff;">당첨 기록 초기화</button>` : ''}
     </div>
 
-    <p class="footnote">이 목록과 기록은 연맹원 모두에게 공유돼요. 같은 화면을 열면 같은 내용이 보여요.</p>
+    <p class="footnote">혹시 버그가 보이시면 데즈곤에게 귓말주세요~.</p>
   `;
 
   document.getElementById('unlockBtn')?.addEventListener('click', () => {
