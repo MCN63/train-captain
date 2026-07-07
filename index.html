@@ -894,7 +894,7 @@ function render(){
         : `<input id="pinInput" type="password" placeholder="비밀번호 입력" /><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
       }
     </div>
-    ${pinError ? `<p class="pin-error">PIN이 맞지 않아요.</p>` : ''}
+    ${pinError ? `<p class="pin-error" style="color:red;">땡!!!!</p>` : ''}
 
     <div class="today-card">
       <p class="label">오늘의 기차장</p>
