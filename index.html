@@ -412,6 +412,8 @@
     border-radius:16px;
     padding:20px;
     margin-bottom:16px;
+    position:relative;
+    overflow:hidden;
   }
   .lotto-card h2{
     color:#fff;
@@ -435,6 +437,22 @@
     font-size:14px;
     text-align:center;
   }
+  .spin-display{
+    text-align:center;
+    padding:18px 0 22px;
+  }
+  .spin-name{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:28px;
+    font-weight:700;
+    color:var(--gold);
+    margin:0;
+    animation:spin-pulse 0.35s ease-in-out infinite alternate;
+  }
+  @keyframes spin-pulse{
+    from{ transform:scale(1); opacity:0.75; }
+    to{ transform:scale(1.08); opacity:1; }
+  }
   .winner-pills{
     display:flex;
     flex-wrap:wrap;
@@ -449,6 +467,32 @@
     font-size:15px;
     padding:8px 14px;
     border-radius:10px;
+  }
+  .winner-pill.pop{
+    animation:pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes pop-in{
+    0%{ transform:scale(0.3); opacity:0; }
+    70%{ transform:scale(1.15); opacity:1; }
+    100%{ transform:scale(1); }
+  }
+  .confetti-layer{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:5;
+  }
+  .confetti-piece{
+    position:absolute;
+    top:-10%;
+    font-size:18px;
+    animation-name:confetti-fall;
+    animation-timing-function:ease-in;
+    animation-fill-mode:forwards;
+  }
+  @keyframes confetti-fall{
+    to{ transform:translateY(340px) rotate(360deg); opacity:0; }
   }
   .lotto-history-item{
     padding:6px 0;
@@ -497,10 +541,16 @@ let cycleCount = 0;     // 이번 순환에서 기차장이 몇 번 확정됐는
 let history = [];      // [{date, captainId, companionId}]
 let lottoHistory = []; // [{date, winners:[...]}]
 let violations = {};   // { memberId: count }
+let lottoDrawState = null; // Firebase에 실시간으로 공유되는 추첨 진행 상태
+let isSpinning = false;
+let spinInterval = null;
+let spinDisplayName = '';
+let lastSeenDrawKey = null; // 당첨 결과가 갱신됐는지 감지용
+let confettiBurstNonce = 0;
 let lastError = null;
 let historyExpanded = true;
 let lottoExpanded = false;
-const EDIT_PIN = 'mcnmcn';
+const EDIT_PIN = 'Ubd63';
 let isUnlocked = false;
 let pinError = false;
 
@@ -544,6 +594,32 @@ function loadAll(){
     lastError = '불러오기 실패(경고): ' + err.message;
     render();
   });
+  db.ref('lottoDraw').on('value', snap => {
+    lottoDrawState = snap.val() || null;
+    if(lottoDrawState && lottoDrawState.drawing){
+      startSpinAnimation();
+    } else {
+      stopSpinAnimation();
+    }
+    render();
+  });
+}
+
+function startSpinAnimation(){
+  if(isSpinning) return;
+  isSpinning = true;
+  spinInterval = setInterval(() => {
+    if(members.length > 0){
+      spinDisplayName = members[Math.floor(Math.random() * members.length)];
+    }
+    render();
+  }, 90);
+}
+
+function stopSpinAnimation(){
+  if(!isSpinning) return;
+  isSpinning = false;
+  if(spinInterval){ clearInterval(spinInterval); spinInterval = null; }
 }
 
 async function saveRoster(){
@@ -651,7 +727,10 @@ function shuffledCopy(arr){
   return a;
 }
 
-function drawLotto(count){
+function startDraw(count){
+  if(isSpinning || (lottoDrawState && lottoDrawState.drawing)){
+    return; // 이미 다른 사람이 추첨 중
+  }
   if(members.length === 0){
     alert('참가자가 없어요. 먼저 명단에 아이디를 추가해주세요.');
     return;
@@ -662,11 +741,22 @@ function drawLotto(count){
     alert('이미 모든 인원이 당첨됐어요. "당첨 기록 초기화"를 누르면 처음부터 다시 뽑을 수 있어요.');
     return;
   }
+  db.ref('lottoDraw').set({ drawing: true, count, startedAt: Date.now() });
+  setTimeout(() => finalizeDraw(count), 2600);
+}
+
+function finalizeDraw(count){
+  const wonSet = new Set(lottoHistory.flatMap(l => l.winners));
+  const pool = members.filter(id => !wonSet.has(id));
+  if(pool.length === 0){
+    db.ref('lottoDraw').set({ drawing: false });
+    return;
+  }
   const n = Math.max(1, Math.min(count, pool.length));
   const winners = shuffledCopy(pool).slice(0, n);
   lottoHistory.unshift({ date: monthStr(), winners });
   saveLotto();
-  render();
+  db.ref('lottoDraw').set({ drawing: false });
 }
 
 function resetLottoHistory(){
@@ -696,6 +786,25 @@ function render(){
   const hasCaptain = members.length > 0;
   const captainId = hasCaptain ? members[0] : null;
 
+  // 당첨자가 새로 갱신됐는지 감지해서 컨페티 연출 트리거
+  const currentDrawKey = lottoHistory.length ? JSON.stringify(lottoHistory[0]) : null;
+  if(lastSeenDrawKey === null){
+    lastSeenDrawKey = currentDrawKey; // 최초 로드시엔 조용히 기준만 잡음
+  } else if(currentDrawKey !== lastSeenDrawKey){
+    lastSeenDrawKey = currentDrawKey;
+    confettiBurstNonce = Date.now() + 1500;
+    setTimeout(render, 1550); // 연출 종료 후 자동으로 지워지도록
+  }
+  const showConfetti = confettiBurstNonce > Date.now();
+  const confettiEmojis = ['🎉','🎊','✨','⭐','🚂'];
+  const confettiPieces = showConfetti ? Array.from({length: 22}).map(() => {
+    const emoji = confettiEmojis[Math.floor(Math.random()*confettiEmojis.length)];
+    const left = Math.random()*100;
+    const delay = (Math.random()*0.3).toFixed(2);
+    const duration = (1.1 + Math.random()*0.6).toFixed(2);
+    return `<span class="confetti-piece" style="left:${left}%; animation-delay:${delay}s; animation-duration:${duration}s;">${emoji}</span>`;
+  }).join('') : '';
+
   const pillsHtml = members.map((id, i) => `
     <span class="pill ${i === 0 ? 'current' : ''}">${escapeHtml(id)}${violations[id] ? `<span class="warn-badge">⚠️${violations[id]}</span>` : ''}</span>
   `).join('');
@@ -719,7 +828,7 @@ function render(){
           <div style="flex:1; padding:0 10px;">
             <span class="h-main">${escapeHtml(h.captainId)}</span>
             ${h.noShow
-              ? `<span class="warn-badge">⚠️ 안 나타남</span>`
+              ? `<span class="warn-badge">⚠️ 노쇼</span>`
               : (h.companionId ? `<span style="color:var(--muted)"> → ${escapeHtml(h.companionId)}</span>` : '')}
           </div>
         </div>
@@ -756,6 +865,7 @@ function render(){
 
   app.innerHTML = `
     <header>
+      <p class="eyebrow">MCN 기차장 시스템</p>
       <h1>MCN 기차장 순번표</h1>
     </header>
 
@@ -765,7 +875,7 @@ function render(){
       <span class="lock-icon">${isUnlocked ? '🔓' : '🔒'}</span>
       ${isUnlocked
         ? `<span class="status-label">수정 모드</span><button class="btn-ghost" id="lockBtn" style="padding:6px 12px; font-size:12px;">잠그기</button>`
-        : `<input id="pinInput" type="password" placeholder="비밀번호 입력" /><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
+        : `<input id="pinInput" type="password" placeholder="PIN 입력" /><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
       }
     </div>
     ${pinError ? `<p class="pin-error">PIN이 맞지 않아요.</p>` : ''}
@@ -805,7 +915,7 @@ function render(){
     </section>
 
     <section class="card">
-      <h2>⚠️ 경고 현황</h2>
+      <h2>⚠️ 노쇼 현황</h2>
       ${violationsHtml}
     </section>
 
@@ -819,16 +929,21 @@ function render(){
 
     <div class="lotto-card">
       <h2>🎰 월간 로또 추첨</h2>
-      ${isUnlocked ? `
+      ${isSpinning ? `
+        <div class="spin-display">
+          <p class="label" style="color:rgba(255,255,255,0.6); margin-bottom:8px;">추첨 중...</p>
+          <p class="spin-name">${escapeHtml(spinDisplayName || '???')}</p>
+        </div>
+      ` : (isUnlocked ? `
         <div class="lotto-controls">
           <input id="lottoCount" type="number" min="1" max="${Math.max(members.length,1)}" value="1" />
           <button class="btn-gold" id="drawBtn" ${members.length === 0 ? 'disabled' : ''}>추첨하기</button>
         </div>
-      ` : `<p class="locked-note" style="color:rgba(255,255,255,0.45);">추첨은 잠금 해제 후 가능해요</p>`}
+      ` : `<p class="locked-note" style="color:rgba(255,255,255,0.45);">추첨은 잠금 해제 후 가능해요</p>`)}
       <p class="footnote" style="color:rgba(255,255,255,0.45); margin:8px 0 12px;">한 번 당첨되면 다음 추첨부터 자동으로 제외돼요.</p>
-      ${lastWinners ? `
+      ${lastWinners && !isSpinning ? `
         <p class="label" style="margin-bottom:6px;">가장 최근 당첨 (${escapeHtml(lottoHistory[0].date)})</p>
-        <div class="winner-pills">${lastWinners.map(w => `<span class="winner-pill">${escapeHtml(w)}</span>`).join('')}</div>
+        <div class="winner-pills">${lastWinners.map(w => `<span class="winner-pill pop">${escapeHtml(w)}</span>`).join('')}</div>
       ` : ''}
       <div class="toggle-row" id="lottoToggle">
         <p class="label" style="margin:0;">지난 추첨 기록</p>
@@ -836,9 +951,10 @@ function render(){
       </div>
       ${lottoExpanded ? lottoHistHtml : ''}
       ${isUnlocked && lottoHistory.length ? `<button class="btn-ghost" id="resetLottoBtn" style="width:100%; margin-top:14px; border-color:rgba(255,255,255,0.25); color:#fff;">당첨 기록 초기화</button>` : ''}
+      ${showConfetti ? `<div class="confetti-layer">${confettiPieces}</div>` : ''}
     </div>
 
-    <p class="footnote">이 목록과 기록은 연맹원 모두에게 공유돼요. 같은 화면을 열면 같은 내용이 보여요.</p>
+    <p class="footnote">버그 신고 데즈곤</p>
   `;
 
   document.getElementById('unlockBtn')?.addEventListener('click', () => {
@@ -896,7 +1012,7 @@ function render(){
   document.getElementById('drawBtn')?.addEventListener('click', () => {
     const countInput = document.getElementById('lottoCount');
     const count = parseInt(countInput.value, 10) || 1;
-    drawLotto(count);
+    startDraw(count);
   });
   app.querySelectorAll('.remove-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
