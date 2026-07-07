@@ -891,7 +891,7 @@ function render(){
       <span class="lock-icon">${isUnlocked ? '🔓' : '🔒'}</span>
       ${isUnlocked
         ? `<span class="status-label">수정 모드</span><button class="btn-ghost" id="lockBtn" style="padding:6px 12px; font-size:12px;">잠그기</button>`
-        : `<input id="pinInput" type="password" placeholder="PIN 입력" /><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
+        : `<input id="pinInput" type="password" placeholder="비밀번호 입력" /><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
       }
     </div>
     ${pinError ? `<p class="pin-error">PIN이 맞지 않아요.</p>` : ''}
