@@ -550,7 +550,7 @@ let confettiBurstNonce = 0;
 let lastError = null;
 let historyExpanded = true;
 let lottoExpanded = false;
-const EDIT_PIN = 'mcnmcn';
+const EDIT_PIN = 'mcnmcn77';
 let isUnlocked = false;
 let pinError = false;
 
@@ -687,6 +687,20 @@ function resetViolation(id){
   render();
 }
 
+function deleteHistoryEntry(idx){
+  if(idx < 0 || idx >= history.length) return;
+  history.splice(idx, 1);
+  saveHistory();
+  render();
+}
+
+function clearAllHistory(){
+  if(!confirm('최근 기차장 기록을 전부 삭제할까요?')) return;
+  history = [];
+  saveHistory();
+  render();
+}
+
 function advance(companionId, noShow){
   if(members.length === 0) return;
   const captainId = members.shift();
@@ -818,7 +832,8 @@ function render(){
     </li>
   `).join('');
 
-  const historyGroups = groupByMonth(history, h => h.date);
+  const historyWithIdx = history.map((h, idx) => ({ ...h, idx }));
+  const historyGroups = groupByMonth(historyWithIdx, h => h.date);
   const historyGroupsHtml = Array.from(historyGroups.entries()).map(([key, items]) => `
     <div class="month-group">
       <p class="month-label">${monthLabel(key)}</p>
@@ -831,6 +846,7 @@ function render(){
               ? `<span class="warn-badge">⚠️ 노쇼</span>`
               : (h.companionId ? `<span style="color:var(--muted)"> → ${escapeHtml(h.companionId)}</span>` : '')}
           </div>
+          ${isUnlocked ? `<button class="reset-violation-btn" data-hidx="${h.idx}" title="이 기록 삭제">×</button>` : ''}
         </div>
       `).join('')}
     </div>
@@ -866,7 +882,7 @@ function render(){
   app.innerHTML = `
     <header>
       <p class="eyebrow">MCN 기차장 시스템</p>
-      <h1>MCN 기차장 순번표</h1>
+      <h1>MCN 기차장 리스트</h1>
     </header>
 
     ${lastError ? `<div class="error-banner">${escapeHtml(lastError)}</div>` : ''}
@@ -890,7 +906,7 @@ function render(){
         </div>
         <div style="margin-top:12px; display:flex; gap:8px;">
           <button class="btn-signal" id="advanceBtn" style="flex:1;">기차장 확정하고 다음으로</button>
-          <button class="btn-ghost" id="noShowBtn" style="border-color:rgba(255,255,255,0.3); color:#FFB199;">⚠️ 안 나타남</button>
+          <button class="btn-ghost" id="noShowBtn" style="border-color:rgba(255,255,255,0.3); color:#FFB199;">⚠️  노쇼</button>
         </div>
       ` : `<p class="locked-note" style="color:rgba(255,255,255,0.45);">확정하려면 잠금을 해제하세요</p>`) : ''}
     </div>
@@ -915,7 +931,7 @@ function render(){
     </section>
 
     <section class="card">
-      <h2>⚠️ 노쇼 현황</h2>
+      <h2>⚠️ 경고 현황</h2>
       ${violationsHtml}
     </section>
 
@@ -925,6 +941,7 @@ function render(){
         <span class="count-badge">${history.length}건 ${historyExpanded ? '▾' : '▸'}</span>
       </div>
       ${historyExpanded ? (history.length ? historyGroupsHtml : '<div class="empty">아직 기록이 없어요</div>') : ''}
+      ${isUnlocked && history.length ? `<button class="btn-ghost" id="clearHistoryBtn" style="width:100%; margin-top:14px;">전체 기록 삭제</button>` : ''}
     </section>
 
     <div class="lotto-card">
@@ -977,6 +994,7 @@ function render(){
     render();
   });
   document.getElementById('resetLottoBtn')?.addEventListener('click', resetLottoHistory);
+  document.getElementById('clearHistoryBtn')?.addEventListener('click', clearAllHistory);
   document.getElementById('historyToggle')?.addEventListener('click', () => {
     historyExpanded = !historyExpanded;
     render();
@@ -1022,8 +1040,13 @@ function render(){
   });
   app.querySelectorAll('.reset-violation-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      const id = e.currentTarget.getAttribute('data-vid');
-      resetViolation(id);
+      const vid = e.currentTarget.getAttribute('data-vid');
+      const hidx = e.currentTarget.getAttribute('data-hidx');
+      if(vid !== null){
+        resetViolation(vid);
+      } else if(hidx !== null){
+        deleteHistoryEntry(parseInt(hidx, 10));
+      }
     });
   });
 }
