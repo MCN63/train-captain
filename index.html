@@ -646,10 +646,10 @@ function getMondayOfWeek(d){
 function currentWeekKey(){
   return fmtDate(getMondayOfWeek(new Date()));
 }
-function dateForDayIndex(idx){ // 0=월 .. 6=일, 이번주 기준
+function dateForDayIndex(idx, weekOffset){ // 0=월 .. 6=일, weekOffset=0(이번주)/1(다음주)
   const monday = getMondayOfWeek(new Date());
   const d = new Date(monday);
-  d.setDate(d.getDate() + idx);
+  d.setDate(d.getDate() + idx + (weekOffset || 0) * 7);
   return d;
 }
 function todayDayIndex(){
@@ -910,6 +910,41 @@ function autoFillWeek(){
   }
 }
 
+// 이번주가 계획대로 완료된다고 가정했을 때, 다음주에 누가 배정될지 미리 계산
+function computeNextWeekPreview(){
+  const { days: effectiveDays } = getEffectiveDays();
+  const waitingAssignedOrder = DAY_DEFS
+    .filter(d => d.pool === 'waiting')
+    .map(d => effectiveDays[d.key])
+    .filter(Boolean)
+    .map(info => info.id);
+  const officerAssignedOrder = DAY_DEFS
+    .filter(d => d.pool === 'officer')
+    .map(d => effectiveDays[d.key])
+    .filter(Boolean)
+    .map(info => info.id);
+
+  function simulateQueue(queue, assignedOrder){
+    const remaining = queue.filter(id => !assignedOrder.includes(id));
+    return remaining.concat(assignedOrder); // 이번주 배정자는 완료 후 맨 뒤로 간다고 가정
+  }
+
+  const simWaiting = simulateQueue(waitingList, waitingAssignedOrder);
+  const simOfficer = simulateQueue(officerList, officerAssignedOrder);
+
+  const nextDays = {};
+  const used = new Set();
+  DAY_DEFS.forEach(def => {
+    const pool = def.pool === 'officer' ? simOfficer : simWaiting;
+    const candidate = pool.find(id => !used.has(id));
+    if(candidate){
+      nextDays[def.key] = candidate;
+      used.add(candidate);
+    }
+  });
+  return nextDays;
+}
+
 function completeDay(dayKey, companionId, noShow){
   const { wKey, days } = getEffectiveDays();
   const info = days[dayKey];
@@ -1088,6 +1123,25 @@ function render(){
     `;
   }).join('');
 
+  const nextWeekPreview = computeNextWeekPreview();
+  const nextWeekRowsHtml = DAY_DEFS.map((def, idx) => {
+    const personId = nextWeekPreview[def.key];
+    const dateLabel = fmtDate(dateForDayIndex(idx, 1)).slice(5);
+    const poolLabel = def.pool === 'officer' ? '알포' : '연맹원';
+    return `
+      <div class="sched-row">
+        <div class="sched-day">
+          <span class="sched-day-label">${def.label}</span>
+          <span class="sched-day-date">${dateLabel}</span>
+          <span class="sched-pool-tag ${def.pool}">${poolLabel}</span>
+        </div>
+        <div class="sched-right">
+          ${personId ? `<span class="sched-name" style="color:var(--muted);">${escapeHtml(personId)}</span>` : `<span class="empty-inline">미정 (${poolLabel} 명단 부족)</span>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+
   const usedIdsThisWeek = new Set(Object.values(effectiveDays).filter(Boolean).map(d => d.id));
 
   function buildQueueRows(list, listName){
@@ -1195,7 +1249,7 @@ function render(){
       <span class="lock-icon">${isUnlocked ? '🔓' : '🔒'}</span>
       ${isUnlocked
         ? `<span class="status-label">수정 모드</span><span class="visit-count">👁 ${visitCount}</span><button class="btn-ghost" id="lockBtn" style="padding:6px 12px; font-size:12px;">잠그기</button>`
-        : `<input id="pinInput" type="password" placeholder="비밀번호 입력" /><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
+        : `<input id="pinInput" type="password" placeholder="비밀번호 입력" /><span class="visit-count">👁 ${visitCount}</span><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
       }
     </div>
     ${pinError ? `<p class="pin-error" style="color:red;">땡!!!!</p>` : ''}
@@ -1209,6 +1263,12 @@ function render(){
     <section class="card">
       <h2>📅 이번주 스케줄 (월~일)</h2>
       ${scheduleRowsHtml}
+    </section>
+
+    <section class="card">
+      <h2>🔭 다음주 스케줄 미리보기</h2>
+      <p class="footnote" style="margin:-8px 0 12px; text-align:left;">이번주가 지금 계획대로 완료된다고 가정한 예상이에요. 완료 처리나 명단이 바뀌면 달라질 수 있어요.</p>
+      ${nextWeekRowsHtml}
     </section>
 
     <section class="card">
