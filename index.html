@@ -17,6 +17,7 @@
     --muted:#6B7280;
     --card:#FFFFFF;
     --border:#E7E5DE;
+    --officer:#6B4FA0;
   }
   *{box-sizing:border-box;}
   body{
@@ -49,66 +50,13 @@
     margin:0;
     letter-spacing:-0.01em;
   }
-  .today-card{
-    background:var(--ink);
-    color:#fff;
-    border-radius:16px;
-    padding:22px 20px;
-    margin-bottom:20px;
-    position:relative;
-    overflow:hidden;
-  }
-  .today-card .label{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:rgba(255,255,255,0.55);
-    margin:0 0 10px;
-  }
-  .today-card .captain-id{
-    font-family:'Space Grotesk',sans-serif;
-    font-size:34px;
-    font-weight:700;
-    margin:0;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .today-card .train-glyph{
-    font-size:22px;
-  }
-  .today-card .date{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    color:rgba(255,255,255,0.5);
-    margin-top:6px;
-  }
-  .companion-row{
-    margin-top:16px;
-    display:flex;
-    gap:8px;
-  }
-  .companion-row input{
-    flex:1;
-    background:rgba(255,255,255,0.08);
-    border:1px solid rgba(255,255,255,0.18);
-    border-radius:10px;
-    padding:10px 12px;
-    color:#fff;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:14px;
-  }
-  .companion-row input::placeholder{
-    color:rgba(255,255,255,0.4);
-  }
   button{
     font-family:'Inter',sans-serif;
     font-weight:600;
-    font-size:14px;
+    font-size:13px;
     border:none;
     border-radius:10px;
-    padding:10px 16px;
+    padding:9px 14px;
     cursor:pointer;
     transition:opacity 0.15s ease, transform 0.1s ease;
   }
@@ -150,29 +98,76 @@
     font-weight:700;
     margin:0 0 14px;
   }
-  .pill-row{
+  .queue-list{
     display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-bottom:16px;
+    flex-direction:column;
+    margin-bottom:12px;
   }
-  .pill{
-    display:inline-flex;
+  .queue-row{
+    display:flex;
     align-items:center;
-    gap:6px;
-    background:var(--bg);
-    border:1px solid var(--border);
-    border-radius:999px;
-    padding:6px 12px;
+    gap:8px;
+    padding:8px 10px;
+    border-bottom:1px solid var(--border);
     font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
+    font-size:13px;
     color:var(--ink);
   }
-  .pill.current{
-    background:var(--signal);
-    border-color:var(--signal);
+  .queue-row:last-child{ border-bottom:none; }
+  .queue-row.active-week{
+    background:rgba(228,87,46,0.08);
+    border-radius:8px;
+  }
+  .queue-num{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:var(--track-done);
     color:#fff;
-    font-weight:600;
+    font-size:10px;
+    font-weight:700;
+    flex-shrink:0;
+  }
+  .queue-row.active-week .queue-num{
+    background:var(--signal);
+  }
+  .queue-name{
+    font-weight:500;
+  }
+  .queue-row.active-week .queue-name{
+    color:var(--signal);
+    font-weight:700;
+  }
+  .caret{
+    color:var(--muted);
+    font-size:10px;
+  }
+  .move-panel{
+    padding:8px 10px 12px 38px;
+    background:var(--bg);
+    border-bottom:1px solid var(--border);
+  }
+  .move-select{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px 10px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    color:var(--ink);
+    background:var(--card);
+  }
+  .pill-remove{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:13px;
+    cursor:pointer;
+    padding:0 4px;
+    line-height:1;
   }
   .warn-badge{
     display:inline-block;
@@ -181,87 +176,11 @@
     font-weight:700;
     color:#A02C1F;
   }
-  .pill.current .warn-badge{
-    color:#FFE3DA;
-  }
-  .rail-list{
-    list-style:none;
-    margin:0;
-    padding:0;
-    position:relative;
-  }
-  .rail-list::before{
-    content:"";
-    position:absolute;
-    left:11px;
-    top:10px;
-    bottom:10px;
-    width:2px;
-    background:var(--track-done);
-  }
-  .rail-item{
-    position:relative;
-    display:flex;
-    align-items:center;
-    gap:14px;
-    padding:9px 0;
-  }
-  .station-dot{
-    width:24px;
-    height:24px;
-    border-radius:50%;
-    background:var(--card);
-    border:2px solid var(--track-done);
-    flex-shrink:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:10px;
-    color:var(--muted);
-    z-index:1;
-    position:relative;
-  }
-  .rail-item.current .station-dot{
-    width:28px;
-    height:28px;
-    border-color:var(--signal);
-    background:var(--signal);
-    color:#fff;
-    box-shadow:0 0 0 4px rgba(228,87,46,0.15);
-  }
-  .rail-item .member-id{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:14px;
-    font-weight:500;
-  }
-  .rail-item.current .member-id{
-    font-weight:600;
-    color:var(--signal);
-  }
-  .rail-item .remove-btn{
-    margin-left:auto;
-    background:none;
-    border:none;
-    color:var(--muted);
-    font-size:16px;
-    padding:2px 8px;
-    cursor:pointer;
-  }
-  .reset-violation-btn{
-    background:none;
-    border:none;
-    color:var(--muted);
-    font-size:15px;
-    padding:2px 6px;
-    cursor:pointer;
-    flex-shrink:0;
-  }
   .add-row{
     display:flex;
     flex-wrap:wrap;
     gap:8px;
-    margin-top:14px;
+    margin-top:6px;
   }
   .add-row input{
     flex:1;
@@ -270,16 +189,7 @@
     padding:10px 12px;
     font-family:'IBM Plex Mono',monospace;
     font-size:14px;
-  }
-  .add-row select{
-    border:1px solid var(--border);
-    border-radius:10px;
-    padding:10px 8px;
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    color:var(--ink);
-    background:var(--card);
-    max-width:130px;
+    min-width:120px;
   }
   .history-item{
     display:flex;
@@ -295,7 +205,7 @@
     color:var(--muted);
     font-size:11px;
     flex-shrink:0;
-    width:68px;
+    width:74px;
   }
   .history-item .h-main{
     font-weight:500;
@@ -387,6 +297,13 @@
     color:var(--muted);
     flex-shrink:0;
   }
+  .visit-count{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    flex-shrink:0;
+    margin-left:auto;
+  }
   .lock-bar.unlocked{
     border-color:var(--rail);
     background:#F0F4F7;
@@ -405,6 +322,152 @@
     font-size:12px;
     text-align:center;
     padding:10px 0;
+  }
+  /* 주간 스케줄 */
+  .today-highlight{
+    background:var(--ink);
+    color:#fff;
+    border-radius:16px;
+    padding:18px 20px;
+    margin-bottom:16px;
+  }
+  .today-highlight .label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.55);
+    margin:0 0 8px;
+  }
+  .today-highlight .captain-id{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:28px;
+    font-weight:700;
+    margin:0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .today-highlight .train-glyph{
+    font-size:20px;
+  }
+  .today-highlight .date{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:rgba(255,255,255,0.5);
+    margin-top:6px;
+  }
+  .sched-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;
+  }
+  .sched-row:last-child{ border-bottom:none; }
+  .sched-day{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:2px;
+    width:58px;
+    flex-shrink:0;
+  }
+  .sched-day-label{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    font-weight:700;
+  }
+  .sched-day-date{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    color:var(--muted);
+  }
+  .sched-pool-tag{
+    font-size:9px;
+    font-family:'IBM Plex Mono',monospace;
+    padding:1px 6px;
+    border-radius:999px;
+    margin-top:2px;
+  }
+  .sched-pool-tag.waiting{
+    background:rgba(52,73,94,0.1);
+    color:var(--rail);
+  }
+  .sched-pool-tag.officer{
+    background:rgba(107,79,160,0.12);
+    color:var(--officer);
+  }
+  .sched-right{
+    flex:1;
+    min-width:180px;
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .sched-name{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px;
+    font-weight:600;
+  }
+  .sched-done-badge{
+    font-size:11px;
+    font-weight:700;
+    color:var(--rail);
+  }
+  .sched-actions{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:6px;
+    width:100%;
+  }
+  .companion-mini{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:6px 8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    flex:1;
+    min-width:100px;
+  }
+  .sched-btn{
+    padding:6px 10px;
+    font-size:12px;
+  }
+  .sched-assign{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    width:100%;
+  }
+  .assign-select{
+    flex:1;
+    min-width:110px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    color:var(--ink);
+    background:var(--card);
+  }
+  .empty-inline{
+    color:var(--muted);
+    font-size:13px;
+  }
+  .reset-violation-btn{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:15px;
+    padding:2px 6px;
+    cursor:pointer;
+    flex-shrink:0;
   }
   .lotto-card{
     background:linear-gradient(135deg, #1B1B1F 0%, #34292B 100%);
@@ -536,41 +599,90 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let members = [];      // 순환 큐. members[0] = 오늘의 기차장
-let cycleCount = 0;     // 이번 순환에서 기차장이 몇 번 확정됐는지
-let history = [];      // [{date, captainId, companionId}]
+const DAY_DEFS = [
+  { key:'mon', label:'월', pool:'waiting' },
+  { key:'tue', label:'화', pool:'waiting' },
+  { key:'wed', label:'수', pool:'waiting' },
+  { key:'thu', label:'목', pool:'waiting' },
+  { key:'fri', label:'금', pool:'waiting' },
+  { key:'sat', label:'토', pool:'officer' },
+  { key:'sun', label:'일', pool:'officer' }
+];
+
+let waitingList = [];   // 연맹원 명단
+let officerList = [];   // 알포 명단
+let weekSchedule = { weekKey: null, days: {} }; // 이번주 요일별 배정
+let completedMembers = []; // 완료 기록 [{id,date,day,pool,companionId,noShow}]
+let history = [];      // [{date, captainId, companionId, noShow}]
 let lottoHistory = []; // [{date, winners:[...]}]
 let violations = {};   // { memberId: count }
-let lottoDrawState = null; // Firebase에 실시간으로 공유되는 추첨 진행 상태
+let lottoDrawState = null;
 let isSpinning = false;
 let spinInterval = null;
 let spinDisplayName = '';
-let lastSeenDrawKey = null; // 당첨 결과가 갱신됐는지 감지용
+let lastSeenDrawKey = null;
 let confettiBurstNonce = 0;
 let lastError = null;
 let historyExpanded = true;
+let openMoveTarget = null; // 'waiting:아이디' 또는 'officer:아이디' - 이동 옵션이 펼쳐진 대상
 let lottoExpanded = false;
+let visitCount = 0;
 const EDIT_PIN = 'mcnmcn77';
 let isUnlocked = false;
 let pinError = false;
 
-function todayStr(){
-  const d = new Date();
-  return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+function pad2(n){ return String(n).padStart(2,'0'); }
+function fmtDate(d){
+  return d.getFullYear() + '.' + pad2(d.getMonth()+1) + '.' + pad2(d.getDate());
+}
+function getMondayOfWeek(d){
+  const date = new Date(d);
+  date.setHours(0,0,0,0);
+  const day = date.getDay(); // 0=Sun..6=Sat
+  const diff = (day === 0 ? -6 : 1) - day;
+  date.setDate(date.getDate() + diff);
+  return date;
+}
+function currentWeekKey(){
+  return fmtDate(getMondayOfWeek(new Date()));
+}
+function dateForDayIndex(idx){ // 0=월 .. 6=일, 이번주 기준
+  const monday = getMondayOfWeek(new Date());
+  const d = new Date(monday);
+  d.setDate(d.getDate() + idx);
+  return d;
+}
+function todayDayIndex(){
+  const jsDay = new Date().getDay(); // 0=Sun..6=Sat
+  return jsDay === 0 ? 6 : jsDay - 1;
 }
 function monthStr(){
   const d = new Date();
-  return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0');
+  return d.getFullYear() + '.' + pad2(d.getMonth()+1);
 }
 
 function loadAll(){
   db.ref('rosterState').on('value', snap => {
     const v = snap.val() || {};
-    members = v.members || [];
-    cycleCount = v.cycleCount || 0;
+    waitingList = v.waitingList || [];
+    officerList = v.officerList || [];
     render();
   }, err => {
     lastError = '불러오기 실패(명단): ' + err.message;
+    render();
+  });
+  db.ref('weekSchedule').on('value', snap => {
+    weekSchedule = snap.val() || { weekKey: null, days: {} };
+    render();
+  }, err => {
+    lastError = '불러오기 실패(스케줄): ' + err.message;
+    render();
+  });
+  db.ref('completedLog').on('value', snap => {
+    completedMembers = snap.val() || [];
+    render();
+  }, err => {
+    lastError = '불러오기 실패(완료기록): ' + err.message;
     render();
   });
   db.ref('historyLog').on('value', snap => {
@@ -603,14 +715,23 @@ function loadAll(){
     }
     render();
   });
+  db.ref('visitCount').on('value', snap => {
+    visitCount = snap.val() || 0;
+    render();
+  });
+}
+
+function recordVisit(){
+  db.ref('visitCount').transaction(current => (current || 0) + 1);
 }
 
 function startSpinAnimation(){
   if(isSpinning) return;
   isSpinning = true;
+  const pool = waitingList.concat(officerList);
   spinInterval = setInterval(() => {
-    if(members.length > 0){
-      spinDisplayName = members[Math.floor(Math.random() * members.length)];
+    if(pool.length > 0){
+      spinDisplayName = pool[Math.floor(Math.random() * pool.length)];
     }
     render();
   }, 90);
@@ -624,10 +745,28 @@ function stopSpinAnimation(){
 
 async function saveRoster(){
   try{
-    await db.ref('rosterState').set({ members, cycleCount });
+    await db.ref('rosterState').set({ waitingList, officerList });
     if(lastError && lastError.startsWith('저장 실패')){ lastError = null; render(); }
   }catch(e){
     lastError = '저장 실패(명단): ' + (e && e.message ? e.message : String(e));
+    render();
+  }
+}
+
+async function saveWeekSchedule(){
+  try{
+    await db.ref('weekSchedule').set(weekSchedule);
+  }catch(e){
+    lastError = '저장 실패(스케줄): ' + (e && e.message ? e.message : String(e));
+    render();
+  }
+}
+
+async function saveCompleted(){
+  try{
+    await db.ref('completedLog').set(completedMembers.slice(0,300));
+  }catch(e){
+    lastError = '저장 실패(완료기록): ' + (e && e.message ? e.message : String(e));
     render();
   }
 }
@@ -659,23 +798,56 @@ async function saveViolations(){
   }
 }
 
-function addMember(id, position){
+function addPerson(listName, id){
   id = id.trim();
   if(!id) return;
-  if(members.includes(id)){
+  if(waitingList.includes(id) || officerList.includes(id)){
     alert('이미 등록된 아이디예요.');
     return;
   }
-  const pos = (typeof position === 'number' && position >= 0 && position <= members.length)
-    ? position
-    : members.length;
-  members.splice(pos, 0, id);
+  if(listName === 'officer'){ officerList.push(id); } else { waitingList.push(id); }
   saveRoster();
   render();
 }
 
-function removeMember(idx){
-  members.splice(idx, 1);
+function movePersonTo(listName, personId, afterId){
+  const arr = listName === 'officer' ? officerList : waitingList;
+  const idx = arr.indexOf(personId);
+  if(idx === -1) return;
+  arr.splice(idx, 1);
+  if(afterId === '__front__' || !afterId){
+    arr.unshift(personId);
+  } else {
+    const afterIdx = arr.indexOf(afterId);
+    if(afterIdx === -1){
+      arr.push(personId);
+    } else {
+      arr.splice(afterIdx + 1, 0, personId);
+    }
+  }
+  openMoveTarget = null;
+  saveRoster();
+  render();
+}
+
+function removePerson(listName, idx){
+  const arr = listName === 'officer' ? officerList : waitingList;
+  const removedId = arr[idx];
+  arr.splice(idx, 1);
+  // 이번주에 배정만 되고 아직 완료 전이었다면 배정도 같이 취소
+  const { wKey, days } = getEffectiveDays();
+  const newDays = { ...days };
+  let daysChanged = false;
+  Object.keys(newDays).forEach(k => {
+    if(newDays[k] && newDays[k].id === removedId && newDays[k].status === 'pending'){
+      delete newDays[k];
+      daysChanged = true;
+    }
+  });
+  if(daysChanged){
+    weekSchedule = { weekKey: wKey, days: newDays };
+    saveWeekSchedule();
+  }
   saveRoster();
   render();
 }
@@ -701,35 +873,90 @@ function clearAllHistory(){
   render();
 }
 
-function advance(companionId, noShow){
-  if(members.length === 0) return;
-  const captainId = members.shift();
-  members.push(captainId); // 오늘의 기차장은 맨 뒤로 가서 다시 순환
-  history.unshift({
-    date: todayStr(),
-    captainId: captainId,
+function deleteCompletedEntry(idx){
+  if(idx < 0 || idx >= completedMembers.length) return;
+  completedMembers.splice(idx, 1);
+  saveCompleted();
+  render();
+}
+
+function getEffectiveDays(){
+  const wKey = currentWeekKey();
+  if(weekSchedule.weekKey === wKey && weekSchedule.days){
+    return { wKey, days: weekSchedule.days };
+  }
+  return { wKey, days: {} };
+}
+
+// 명단 순서대로 비어있는 요일을 자동으로 채움 (추가 버튼 누르면 바로 반영되도록)
+function autoFillWeek(){
+  const { wKey, days } = getEffectiveDays();
+  const newDays = { ...days };
+  const usedIds = new Set(Object.values(newDays).filter(Boolean).map(d => d.id));
+  let anyChange = false;
+  DAY_DEFS.forEach(def => {
+    if(newDays[def.key]) return; // 이미 배정(대기중이든 완료든) 되어있으면 건드리지 않음
+    const pool = def.pool === 'officer' ? officerList : waitingList;
+    const candidate = pool.find(id => !usedIds.has(id));
+    if(candidate){
+      newDays[def.key] = { id: candidate, status: 'pending', companionId: '' };
+      usedIds.add(candidate);
+      anyChange = true;
+    }
+  });
+  if(anyChange){
+    weekSchedule = { weekKey: wKey, days: newDays };
+    saveWeekSchedule();
+  }
+}
+
+function completeDay(dayKey, companionId, noShow){
+  const { wKey, days } = getEffectiveDays();
+  const info = days[dayKey];
+  if(!info || !info.id) return;
+  const personId = info.id;
+  const dayIdx = DAY_DEFS.findIndex(d => d.key === dayKey);
+  const def = DAY_DEFS[dayIdx];
+  const dateStr = fmtDate(dateForDayIndex(dayIdx));
+
+  // 큐에서 빼서 맨 뒤에 다시 넣음 -> 순서가 다시 돌아옴
+  if(def.pool === 'officer'){
+    officerList = officerList.filter(id => id !== personId);
+    officerList.push(personId);
+  } else {
+    waitingList = waitingList.filter(id => id !== personId);
+    waitingList.push(personId);
+  }
+
+  completedMembers.unshift({
+    id: personId,
+    date: dateStr,
+    day: def.label,
+    pool: def.pool === 'officer' ? '알포' : '연맹원',
     companionId: (companionId || '').trim(),
     noShow: !!noShow
   });
+
+  history.unshift({
+    date: dateStr,
+    captainId: personId,
+    companionId: (companionId || '').trim(),
+    noShow: !!noShow
+  });
+
   if(noShow){
-    violations[captainId] = (violations[captainId] || 0) + 1;
+    violations[personId] = (violations[personId] || 0) + 1;
     saveViolations();
   }
-  cycleCount += 1;
-  let didReset = false;
-  if(cycleCount >= members.length && members.length > 0){
-    // 한 바퀴(전원 순환) 완료 - 기록 리셋
-    history = [];
-    cycleCount = 0;
-    didReset = true;
-  }
+
+  const newDays = { ...days, [dayKey]: { id: personId, status: noShow ? 'noshow' : 'done', companionId: (companionId || '').trim() } };
+  weekSchedule = { weekKey: wKey, days: newDays };
+
   saveRoster();
+  saveWeekSchedule();
+  saveCompleted();
   saveHistory();
   render();
-  if(didReset){
-    // 리셋 직후에는 기록이 비어있으니 굳이 펼쳐둘 필요 없음
-    historyExpanded = false;
-  }
 }
 
 function shuffledCopy(arr){
@@ -743,14 +970,15 @@ function shuffledCopy(arr){
 
 function startDraw(count){
   if(isSpinning || (lottoDrawState && lottoDrawState.drawing)){
-    return; // 이미 다른 사람이 추첨 중
+    return;
   }
-  if(members.length === 0){
+  const totalPool = waitingList.concat(officerList);
+  if(totalPool.length === 0){
     alert('참가자가 없어요. 먼저 명단에 아이디를 추가해주세요.');
     return;
   }
   const wonSet = new Set(lottoHistory.flatMap(l => l.winners));
-  const pool = members.filter(id => !wonSet.has(id));
+  const pool = totalPool.filter(id => !wonSet.has(id));
   if(pool.length === 0){
     alert('이미 모든 인원이 당첨됐어요. "당첨 기록 초기화"를 누르면 처음부터 다시 뽑을 수 있어요.');
     return;
@@ -760,8 +988,9 @@ function startDraw(count){
 }
 
 function finalizeDraw(count){
+  const totalPool = waitingList.concat(officerList);
   const wonSet = new Set(lottoHistory.flatMap(l => l.winners));
-  const pool = members.filter(id => !wonSet.has(id));
+  const pool = totalPool.filter(id => !wonSet.has(id));
   if(pool.length === 0){
     db.ref('lottoDraw').set({ drawing: false });
     return;
@@ -797,17 +1026,15 @@ function monthLabel(key){
 
 function render(){
   const app = document.getElementById('app');
-  const hasCaptain = members.length > 0;
-  const captainId = hasCaptain ? members[0] : null;
 
   // 당첨자가 새로 갱신됐는지 감지해서 컨페티 연출 트리거
   const currentDrawKey = lottoHistory.length ? JSON.stringify(lottoHistory[0]) : null;
   if(lastSeenDrawKey === null){
-    lastSeenDrawKey = currentDrawKey; // 최초 로드시엔 조용히 기준만 잡음
+    lastSeenDrawKey = currentDrawKey;
   } else if(currentDrawKey !== lastSeenDrawKey){
     lastSeenDrawKey = currentDrawKey;
     confettiBurstNonce = Date.now() + 1500;
-    setTimeout(render, 1550); // 연출 종료 후 자동으로 지워지도록
+    setTimeout(render, 1550);
   }
   const showConfetti = confettiBurstNonce > Date.now();
   const confettiEmojis = ['🎉','🎊','✨','⭐','🚂'];
@@ -819,18 +1046,94 @@ function render(){
     return `<span class="confetti-piece" style="left:${left}%; animation-delay:${delay}s; animation-duration:${duration}s;">${emoji}</span>`;
   }).join('') : '';
 
-  const pillsHtml = members.map((id, i) => `
-    <span class="pill ${i === 0 ? 'current' : ''}">${escapeHtml(id)}${violations[id] ? `<span class="warn-badge">⚠️${violations[id]}</span>` : ''}</span>
-  `).join('');
+  autoFillWeek(); // 명단 순서대로 빈 요일 자동 채우기
+  const { days: effectiveDays } = getEffectiveDays();
+  const todayIdx = todayDayIndex();
+  const todayDef = DAY_DEFS[todayIdx];
+  const todayInfo = effectiveDays[todayDef.key];
 
-  const railHtml = members.map((id, i) => `
-    <li class="rail-item ${i === 0 ? 'current' : ''}">
-      <span class="station-dot">${i+1}</span>
-      <span class="member-id">${escapeHtml(id)}</span>
-      ${violations[id] ? `<span class="warn-badge">⚠️${violations[id]}</span>` : ''}
-      ${isUnlocked ? `<button class="remove-btn" data-idx="${i}" aria-label="삭제" title="삭제">×</button>` : ''}
-    </li>
-  `).join('');
+  const scheduleRowsHtml = DAY_DEFS.map((def, idx) => {
+    const info = effectiveDays[def.key];
+    const dateLabel = fmtDate(dateForDayIndex(idx)).slice(5);
+    const poolLabel = def.pool === 'officer' ? '알포' : '연맹원';
+    let rightHtml;
+    if(info && info.id){
+      const isDone = info.status === 'done' || info.status === 'noshow';
+      rightHtml = `
+        <span class="sched-name">${escapeHtml(info.id)}</span>
+        ${info.status === 'noshow' ? `<span class="warn-badge">⚠️ 노쇼</span>` : (isDone ? `<span class="sched-done-badge">✓ 완료</span>` : '')}
+        ${info.companionId ? `<span style="color:var(--muted); font-size:12px;"> → ${escapeHtml(info.companionId)}</span>` : ''}
+        ${violations[info.id] ? `<span class="warn-badge">⚠️${violations[info.id]}</span>` : ''}
+        ${isUnlocked && !isDone ? `
+          <div class="sched-actions">
+            <input type="text" class="companion-mini" id="companion-${def.key}" placeholder="동행 아이디(선택)" />
+            <button class="btn-signal sched-btn" data-day="${def.key}" data-action="done">완료</button>
+            <button class="btn-ghost sched-btn" data-day="${def.key}" data-action="noshow" style="color:#A02C1F; border-color:#A02C1F;">노쇼</button>
+          </div>
+        ` : ''}
+      `;
+    } else {
+      rightHtml = `<span class="empty-inline">미정 (${poolLabel} 명단 부족)</span>`;
+    }
+
+    return `
+      <div class="sched-row">
+        <div class="sched-day">
+          <span class="sched-day-label">${def.label}</span>
+          <span class="sched-day-date">${dateLabel}</span>
+          <span class="sched-pool-tag ${def.pool}">${poolLabel}</span>
+        </div>
+        <div class="sched-right">${rightHtml}</div>
+      </div>
+    `;
+  }).join('');
+
+  const usedIdsThisWeek = new Set(Object.values(effectiveDays).filter(Boolean).map(d => d.id));
+
+  function buildQueueRows(list, listName){
+    return list.map((id, i) => {
+      const isActive = usedIdsThisWeek.has(id);
+      const isOpen = openMoveTarget === `${listName}:${id}`;
+      const options = list.filter(x => x !== id);
+      return `
+        <div class="queue-row ${isActive ? 'active-week' : ''}">
+          <span class="queue-num">${i+1}</span>
+          <span class="queue-name" ${isUnlocked ? `data-list="${listName}" data-id="${escapeHtml(id)}"` : ''} style="${isUnlocked ? 'cursor:pointer;' : ''}">${escapeHtml(id)}${isUnlocked ? ` <span class="caret">${isOpen ? '▾' : '▸'}</span>` : ''}</span>
+          ${violations[id] ? `<span class="warn-badge">⚠️${violations[id]}</span>` : ''}
+          ${isUnlocked ? `<button class="pill-remove" data-list="${listName}" data-idx="${i}" title="삭제" style="margin-left:auto;">×</button>` : ''}
+        </div>
+        ${isOpen ? `
+          <div class="move-panel">
+            <p class="footnote" style="margin:0 0 6px; text-align:left;">${escapeHtml(id)}을(를) 어디로 옮길까요?</p>
+            <select class="move-select" data-list="${listName}" data-id="${escapeHtml(id)}">
+              <option value="">-- 위치 선택 --</option>
+              <option value="__front__">맨 앞으로</option>
+              ${options.map(x => `<option value="${escapeHtml(x)}">${escapeHtml(x)} 밑으로</option>`).join('')}
+            </select>
+          </div>
+        ` : ''}
+      `;
+    }).join('');
+  }
+
+  const waitingPillsHtml = buildQueueRows(waitingList, 'waiting');
+  const officerPillsHtml = buildQueueRows(officerList, 'officer');
+
+  const completedListHtml = completedMembers.length
+    ? completedMembers.map((c, idx) => `
+      <div class="history-item">
+        <span class="h-date">${escapeHtml(c.date.slice(5))}(${escapeHtml(c.day)})</span>
+        <div style="flex:1; padding:0 10px;">
+          <span class="h-main">${escapeHtml(c.id)}</span>
+          <span style="color:var(--muted); font-size:11px;"> · ${escapeHtml(c.pool)}</span>
+          ${c.noShow
+            ? `<span class="warn-badge">⚠️ 노쇼</span>`
+            : (c.companionId ? `<span style="color:var(--muted)"> → ${escapeHtml(c.companionId)}</span>` : '')}
+        </div>
+        ${isUnlocked ? `<button class="reset-violation-btn" data-cidx="${idx}" title="이 기록 삭제">×</button>` : ''}
+      </div>
+    `).join('')
+    : '<div class="empty">아직 완료된 기록이 없습니다</div>';
 
   const historyWithIdx = history.map((h, idx) => ({ ...h, idx }));
   const historyGroups = groupByMonth(historyWithIdx, h => h.date);
@@ -867,7 +1170,7 @@ function render(){
     `).join('')
     : '<div class="empty">아직 경고받은 사람이 없어요</div>';
 
-  const lottoRest = lottoHistory.slice(1); // 최신 1건은 위에서 이미 강조 표시
+  const lottoRest = lottoHistory.slice(1);
   const lottoHistHtml = lottoRest.length
     ? lottoRest.map(l => `
       <div class="lotto-history-item">
@@ -878,6 +1181,7 @@ function render(){
     : '<div class="empty" style="color:rgba(255,255,255,0.5)">지난 기록이 없어요</div>';
 
   const lastWinners = lottoHistory.length ? lottoHistory[0].winners : null;
+  const lottoPoolSize = Math.max(waitingList.length + officerList.length, 1);
 
   app.innerHTML = `
     <header>
@@ -890,44 +1194,48 @@ function render(){
     <div class="lock-bar ${isUnlocked ? 'unlocked' : ''}">
       <span class="lock-icon">${isUnlocked ? '🔓' : '🔒'}</span>
       ${isUnlocked
-        ? `<span class="status-label">수정 모드</span><button class="btn-ghost" id="lockBtn" style="padding:6px 12px; font-size:12px;">잠그기</button>`
+        ? `<span class="status-label">수정 모드</span><span class="visit-count">👁 ${visitCount}</span><button class="btn-ghost" id="lockBtn" style="padding:6px 12px; font-size:12px;">잠그기</button>`
         : `<input id="pinInput" type="password" placeholder="비밀번호 입력" /><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
       }
     </div>
     ${pinError ? `<p class="pin-error" style="color:red;">땡!!!!</p>` : ''}
 
-    <div class="today-card">
-      <p class="label">오늘의 기차장</p>
-      <p class="captain-id"><span class="train-glyph">🚂</span>${hasCaptain ? escapeHtml(captainId) : '등록된 인원 없음'}${hasCaptain && violations[captainId] ? `<span class="warn-badge" style="color:#FFB199;">⚠️${violations[captainId]}</span>` : ''}</p>
-      <p class="date">${todayStr()}</p>
-      ${hasCaptain ? (isUnlocked ? `
-        <div class="companion-row">
-          <input id="companionInput" type="text" placeholder="데려간 연맹원 아이디 (선택)" />
-        </div>
-        <div style="margin-top:12px; display:flex; gap:8px;">
-          <button class="btn-signal" id="advanceBtn" style="flex:1;">기차장 확정하고 다음으로</button>
-          <button class="btn-ghost" id="noShowBtn" style="border-color:rgba(255,255,255,0.3); color:#FFB199;">⚠️  노쇼</button>
-        </div>
-      ` : `<p class="locked-note" style="color:rgba(255,255,255,0.45);"></p>`) : ''}
+    <div class="today-highlight">
+      <p class="label">오늘 (${todayDef.label}) 담당</p>
+      <p class="captain-id"><span class="train-glyph">🚂</span>${todayInfo && todayInfo.id ? escapeHtml(todayInfo.id) : '미정'}</p>
+      <p class="date">${fmtDate(dateForDayIndex(todayIdx))}</p>
     </div>
 
     <section class="card">
-      <h2>전체 명단 한눈에 보기 (${members.length}명)</h2>
-      ${members.length ? `<div class="pill-row">${pillsHtml}</div>` : '<div class="empty">아직 등록된 연맹원이 없습니</div>'}
-      <h2 style="margin-top:4px;">순환 순서</h2>
-      ${members.length ? `<p class="footnote" style="margin:-6px 0 8px; text-align:left;">이번 순환 진행: ${cycleCount} / ${members.length}명 (사이클 한번 돌면 리셋됩니다)</p>` : ''}
-      ${members.length ? `<ul class="rail-list">${railHtml}</ul>` : ''}
+      <h2>📅 이번주 스케줄 (월~일)</h2>
+      ${scheduleRowsHtml}
+    </section>
+
+    <section class="card">
+      <h2>연맹원 명단 (${waitingList.length}명)</h2>
+      ${waitingList.length ? `<div class="queue-list">${waitingPillsHtml}</div>` : '<div class="empty">아직 등록된 연맹원이 없습니다</div>'}
       ${isUnlocked ? `
         <div class="add-row">
-          <input id="newMemberInput" type="text" placeholder="아이디 입력 후 추가" />
-          <select id="insertPosition">
-            <option value="0">맨 앞 (다음 기차장)</option>
-            ${members.map((m, i) => `<option value="${i+1}" ${i === members.length-1 ? 'selected' : ''}>${escapeHtml(m)} 다음</option>`).join('')}
-          </select>
-          <button class="btn-ghost" id="addBtn">추가</button>
+          <input id="newWaitingInput" type="text" placeholder="아이디 입력 후 추가" />
+          <button class="btn-ghost" id="addWaitingBtn">추가</button>
         </div>
-        <p class="footnote" style="margin-top:8px; text-align:left;">위치를 고르면 순서 중간에도 넣을 수 있어요. 기본은 맨 뒤입니다.</p>
       ` : `<p class="locked-note">명단 추가·삭제는 R4만 가능합니다</p>`}
+    </section>
+
+    <section class="card">
+      <h2>알포 명단 (${officerList.length}명)</h2>
+      ${officerList.length ? `<div class="queue-list">${officerPillsHtml}</div>` : '<div class="empty">아직 등록된 알포가 없습니다</div>'}
+      ${isUnlocked ? `
+        <div class="add-row">
+          <input id="newOfficerInput" type="text" placeholder="아이디 입력 후 추가" />
+          <button class="btn-ghost" id="addOfficerBtn">추가</button>
+        </div>
+      ` : `<p class="locked-note">명단 추가·삭제는 R4만 가능합니다</p>`}
+    </section>
+
+    <section class="card">
+      <h2>✅ 기차장 완료 (${completedMembers.length}건)</h2>
+      ${completedListHtml}
     </section>
 
     <section class="card">
@@ -953,11 +1261,11 @@ function render(){
         </div>
       ` : (isUnlocked ? `
         <div class="lotto-controls">
-          <input id="lottoCount" type="number" min="1" max="${Math.max(members.length,1)}" value="1" />
-          <button class="btn-gold" id="drawBtn" ${members.length === 0 ? 'disabled' : ''}>추첨하기</button>
+          <input id="lottoCount" type="number" min="1" max="${lottoPoolSize}" value="1" />
+          <button class="btn-gold" id="drawBtn" ${(waitingList.length + officerList.length) === 0 ? 'disabled' : ''}>추첨하기</button>
         </div>
       ` : `<p class="locked-note" style="color:rgba(255,255,255,0.45);">추첨은 R4만 가능합니다</p>`)}
-      <p class="footnote" style="color:rgba(255,255,255,0.45); margin:8px 0 12px;">한 번 당첨되면 다음 추첨부터 자동으로 제외됩니다.</p>
+      <p class="footnote" style="color:rgba(255,255,255,0.45); margin:8px 0 12px;">한 번 당첨되면 다음 추첨부터 자동으로 제외됩니다. (연맹원+알포 전체 대상)</p>
       ${lastWinners && !isSpinning ? `
         <p class="label" style="margin-bottom:6px;">가장 최근 당첨 (${escapeHtml(lottoHistory[0].date)})</p>
         <div class="winner-pills">${lastWinners.map(w => `<span class="winner-pill pop">${escapeHtml(w)}</span>`).join('')}</div>
@@ -1003,28 +1311,26 @@ function render(){
     lottoExpanded = !lottoExpanded;
     render();
   });
-  document.getElementById('addBtn')?.addEventListener('click', () => {
-    const input = document.getElementById('newMemberInput');
-    const posSelect = document.getElementById('insertPosition');
-    const pos = posSelect ? parseInt(posSelect.value, 10) : undefined;
-    addMember(input.value, pos);
+  document.getElementById('addWaitingBtn')?.addEventListener('click', () => {
+    const input = document.getElementById('newWaitingInput');
+    addPerson('waiting', input.value);
     input.value = '';
   });
-  document.getElementById('newMemberInput')?.addEventListener('keydown', (e) => {
+  document.getElementById('newWaitingInput')?.addEventListener('keydown', (e) => {
     if(e.key === 'Enter'){
-      const posSelect = document.getElementById('insertPosition');
-      const pos = posSelect ? parseInt(posSelect.value, 10) : undefined;
-      addMember(e.target.value, pos);
+      addPerson('waiting', e.target.value);
       e.target.value = '';
     }
   });
-  document.getElementById('advanceBtn')?.addEventListener('click', () => {
-    const companion = document.getElementById('companionInput')?.value || '';
-    advance(companion, false);
+  document.getElementById('addOfficerBtn')?.addEventListener('click', () => {
+    const input = document.getElementById('newOfficerInput');
+    addPerson('officer', input.value);
+    input.value = '';
   });
-  document.getElementById('noShowBtn')?.addEventListener('click', () => {
-    if(confirm(`${captainId}님이 오늘 기차장 역할을 안 했나요? 경고 1회가 추가돼요.`)){
-      advance('', true);
+  document.getElementById('newOfficerInput')?.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter'){
+      addPerson('officer', e.target.value);
+      e.target.value = '';
     }
   });
   document.getElementById('drawBtn')?.addEventListener('click', () => {
@@ -1032,20 +1338,53 @@ function render(){
     const count = parseInt(countInput.value, 10) || 1;
     startDraw(count);
   });
-  app.querySelectorAll('.remove-btn').forEach(btn => {
+  app.querySelectorAll('.pill-remove').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const idx = parseInt(e.currentTarget.getAttribute('data-idx'), 10);
-      removeMember(idx);
+      const listName = e.currentTarget.getAttribute('data-list');
+      removePerson(listName, idx);
+    });
+  });
+  app.querySelectorAll('.queue-name').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const listName = e.currentTarget.getAttribute('data-list');
+      const id = e.currentTarget.getAttribute('data-id');
+      const key = `${listName}:${id}`;
+      openMoveTarget = (openMoveTarget === key) ? null : key;
+      render();
+    });
+  });
+  app.querySelectorAll('.move-select').forEach(sel => {
+    sel.addEventListener('change', (e) => {
+      const listName = e.currentTarget.getAttribute('data-list');
+      const id = e.currentTarget.getAttribute('data-id');
+      const target = e.currentTarget.value;
+      if(!target) return;
+      movePersonTo(listName, id, target);
+    });
+  });
+  app.querySelectorAll('.sched-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const dayKey = e.currentTarget.getAttribute('data-day');
+      const action = e.currentTarget.getAttribute('data-action');
+      if(action === 'done' || action === 'noshow'){
+        const companionInput = document.getElementById(`companion-${dayKey}`);
+        const companionVal = companionInput ? companionInput.value : '';
+        completeDay(dayKey, companionVal, action === 'noshow');
+      }
     });
   });
   app.querySelectorAll('.reset-violation-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const vid = e.currentTarget.getAttribute('data-vid');
       const hidx = e.currentTarget.getAttribute('data-hidx');
+      const cidx = e.currentTarget.getAttribute('data-cidx');
       if(vid !== null){
         resetViolation(vid);
       } else if(hidx !== null){
         deleteHistoryEntry(parseInt(hidx, 10));
+      } else if(cidx !== null){
+        deleteCompletedEntry(parseInt(cidx, 10));
       }
     });
   });
@@ -1058,6 +1397,7 @@ function escapeHtml(str){
 }
 
 loadAll();
+recordVisit();
 </script>
 </body>
 </html>
