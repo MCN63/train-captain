@@ -17,7 +17,6 @@
     --muted:#6B7280;
     --card:#FFFFFF;
     --border:#E7E5DE;
-    --officer:#6B4FA0;
   }
   *{box-sizing:border-box;}
   body{
@@ -50,13 +49,66 @@
     margin:0;
     letter-spacing:-0.01em;
   }
+  .today-card{
+    background:var(--ink);
+    color:#fff;
+    border-radius:16px;
+    padding:22px 20px;
+    margin-bottom:20px;
+    position:relative;
+    overflow:hidden;
+  }
+  .today-card .label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,0.55);
+    margin:0 0 10px;
+  }
+  .today-card .captain-id{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:34px;
+    font-weight:700;
+    margin:0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .today-card .train-glyph{
+    font-size:22px;
+  }
+  .today-card .date{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:rgba(255,255,255,0.5);
+    margin-top:6px;
+  }
+  .companion-row{
+    margin-top:16px;
+    display:flex;
+    gap:8px;
+  }
+  .companion-row input{
+    flex:1;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:10px;
+    padding:10px 12px;
+    color:#fff;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px;
+  }
+  .companion-row input::placeholder{
+    color:rgba(255,255,255,0.4);
+  }
   button{
     font-family:'Inter',sans-serif;
     font-weight:600;
-    font-size:13px;
+    font-size:14px;
     border:none;
     border-radius:10px;
-    padding:9px 14px;
+    padding:10px 16px;
     cursor:pointer;
     transition:opacity 0.15s ease, transform 0.1s ease;
   }
@@ -97,6 +149,268 @@
     font-size:15px;
     font-weight:700;
     margin:0 0 14px;
+  }
+  .pill-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:16px;
+  }
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:6px 12px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink);
+  }
+  .pill.current{
+    background:var(--signal);
+    border-color:var(--signal);
+    color:#fff;
+    font-weight:600;
+  }
+  .pill.done{
+    color:var(--muted);
+    border-color:var(--track-done);
+    background:transparent;
+  }
+  .warn-badge{
+    display:inline-block;
+    margin-left:6px;
+    font-size:11px;
+    font-weight:700;
+    color:#A02C1F;
+  }
+  .pill.current .warn-badge{
+    color:#FFE3DA;
+  }
+  .rail-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    position:relative;
+  }
+  .rail-list::before{
+    content:"";
+    position:absolute;
+    left:11px;
+    top:10px;
+    bottom:10px;
+    width:2px;
+    background:var(--track-done);
+  }
+  .rail-item{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:9px 0;
+  }
+  .station-dot{
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:var(--card);
+    border:2px solid var(--track-done);
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    color:var(--muted);
+    z-index:1;
+    position:relative;
+  }
+  .rail-item.current .station-dot{
+    width:28px;
+    height:28px;
+    border-color:var(--signal);
+    background:var(--signal);
+    color:#fff;
+    box-shadow:0 0 0 4px rgba(228,87,46,0.15);
+  }
+  .rail-item.done .station-dot{
+    border-color:var(--rail);
+    background:var(--rail);
+    color:#fff;
+  }
+  .rail-item.done .member-id{
+    color:var(--muted);
+  }
+  .rail-item .member-id{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px;
+    font-weight:500;
+  }
+  .rail-item.current .member-id{
+    font-weight:600;
+    color:var(--signal);
+  }
+  .rail-item .remove-btn{
+    margin-left:auto;
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:16px;
+    padding:2px 8px;
+    cursor:pointer;
+  }
+  .pill-remove{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:13px;
+    cursor:pointer;
+    padding:0 4px;
+    line-height:1;
+  }
+  .pill.current .pill-remove{
+    color:rgba(255,255,255,0.7);
+  }
+  .edit-btn{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:13px;
+    cursor:pointer;
+    padding:0 4px;
+    line-height:1;
+  }
+  .empty-inline{
+    color:var(--muted);
+    font-size:13px;
+  }
+  .today-tag{
+    display:inline-block;
+    background:var(--signal);
+    color:#fff;
+    font-size:9px;
+    font-weight:700;
+    padding:1px 6px;
+    border-radius:999px;
+    vertical-align:middle;
+    margin-left:2px;
+  }
+  .sched-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:12px 10px;
+    border-bottom:1px solid var(--border);
+    flex-wrap:wrap;
+    border-radius:8px;
+  }
+  .sched-row:last-child{ border-bottom:none; }
+  .sched-row.today{
+    background:rgba(228,87,46,0.07);
+  }
+  .sched-day{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:2px;
+    width:58px;
+    flex-shrink:0;
+  }
+  .sched-day-label{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    font-weight:700;
+  }
+  .sched-day-date{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    color:var(--muted);
+  }
+  .sched-pool-tag{
+    font-size:9px;
+    font-family:'IBM Plex Mono',monospace;
+    padding:1px 6px;
+    border-radius:999px;
+    margin-top:2px;
+    display:inline-block;
+  }
+  .sched-pool-tag.waiting{
+    background:rgba(52,73,94,0.1);
+    color:var(--rail);
+  }
+  .sched-pool-tag.officer{
+    background:rgba(107,79,160,0.12);
+    color:#6B4FA0;
+  }
+  .sched-right{
+    flex:1;
+    min-width:180px;
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .sched-name{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:14px;
+    font-weight:600;
+  }
+  .sched-done-badge{
+    font-size:11px;
+    font-weight:700;
+    color:var(--rail);
+  }
+  .sched-actions{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:6px;
+    width:100%;
+  }
+  .companion-mini{
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:6px 8px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    flex:1;
+    min-width:100px;
+  }
+  .sched-btn{
+    padding:6px 10px;
+    font-size:12px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .move-panel{
+    padding:8px 10px 12px 38px;
+    background:var(--bg);
+    border-bottom:1px solid var(--border);
+  }
+  .assign-select{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px 10px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    color:var(--ink);
+    background:var(--card);
+  }
+  .move-select{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px 10px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    color:var(--ink);
+    background:var(--card);
   }
   .queue-list{
     display:flex;
@@ -145,42 +459,20 @@
     color:var(--muted);
     font-size:10px;
   }
-  .move-panel{
-    padding:8px 10px 12px 38px;
-    background:var(--bg);
-    border-bottom:1px solid var(--border);
-  }
-  .move-select{
-    width:100%;
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:8px 10px;
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    color:var(--ink);
-    background:var(--card);
-  }
-  .pill-remove{
+  .reset-violation-btn{
     background:none;
     border:none;
     color:var(--muted);
-    font-size:13px;
+    font-size:15px;
+    padding:2px 6px;
     cursor:pointer;
-    padding:0 4px;
-    line-height:1;
-  }
-  .warn-badge{
-    display:inline-block;
-    margin-left:6px;
-    font-size:11px;
-    font-weight:700;
-    color:#A02C1F;
+    flex-shrink:0;
   }
   .add-row{
     display:flex;
     flex-wrap:wrap;
     gap:8px;
-    margin-top:6px;
+    margin-top:14px;
   }
   .add-row input{
     flex:1;
@@ -189,7 +481,16 @@
     padding:10px 12px;
     font-family:'IBM Plex Mono',monospace;
     font-size:14px;
-    min-width:120px;
+  }
+  .add-row select{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 8px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
+    color:var(--ink);
+    background:var(--card);
+    max-width:130px;
   }
   .history-item{
     display:flex;
@@ -205,7 +506,7 @@
     color:var(--muted);
     font-size:11px;
     flex-shrink:0;
-    width:74px;
+    width:68px;
   }
   .history-item .h-main{
     font-weight:500;
@@ -322,152 +623,6 @@
     font-size:12px;
     text-align:center;
     padding:10px 0;
-  }
-  /* 주간 스케줄 */
-  .today-highlight{
-    background:var(--ink);
-    color:#fff;
-    border-radius:16px;
-    padding:18px 20px;
-    margin-bottom:16px;
-  }
-  .today-highlight .label{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:11px;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color:rgba(255,255,255,0.55);
-    margin:0 0 8px;
-  }
-  .today-highlight .captain-id{
-    font-family:'Space Grotesk',sans-serif;
-    font-size:28px;
-    font-weight:700;
-    margin:0;
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-  .today-highlight .train-glyph{
-    font-size:20px;
-  }
-  .today-highlight .date{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    color:rgba(255,255,255,0.5);
-    margin-top:6px;
-  }
-  .sched-row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:12px 0;
-    border-bottom:1px solid var(--border);
-    flex-wrap:wrap;
-  }
-  .sched-row:last-child{ border-bottom:none; }
-  .sched-day{
-    display:flex;
-    flex-direction:column;
-    align-items:flex-start;
-    gap:2px;
-    width:58px;
-    flex-shrink:0;
-  }
-  .sched-day-label{
-    font-family:'Space Grotesk',sans-serif;
-    font-size:16px;
-    font-weight:700;
-  }
-  .sched-day-date{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:10px;
-    color:var(--muted);
-  }
-  .sched-pool-tag{
-    font-size:9px;
-    font-family:'IBM Plex Mono',monospace;
-    padding:1px 6px;
-    border-radius:999px;
-    margin-top:2px;
-  }
-  .sched-pool-tag.waiting{
-    background:rgba(52,73,94,0.1);
-    color:var(--rail);
-  }
-  .sched-pool-tag.officer{
-    background:rgba(107,79,160,0.12);
-    color:var(--officer);
-  }
-  .sched-right{
-    flex:1;
-    min-width:180px;
-    display:flex;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:6px;
-  }
-  .sched-name{
-    font-family:'IBM Plex Mono',monospace;
-    font-size:14px;
-    font-weight:600;
-  }
-  .sched-done-badge{
-    font-size:11px;
-    font-weight:700;
-    color:var(--rail);
-  }
-  .sched-actions{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    flex-wrap:wrap;
-    margin-top:6px;
-    width:100%;
-  }
-  .companion-mini{
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:6px 8px;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:12px;
-    flex:1;
-    min-width:100px;
-  }
-  .sched-btn{
-    padding:6px 10px;
-    font-size:12px;
-  }
-  .sched-assign{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    flex-wrap:wrap;
-    width:100%;
-  }
-  .assign-select{
-    flex:1;
-    min-width:110px;
-    border:1px solid var(--border);
-    border-radius:8px;
-    padding:8px;
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    color:var(--ink);
-    background:var(--card);
-  }
-  .empty-inline{
-    color:var(--muted);
-    font-size:13px;
-  }
-  .reset-violation-btn{
-    background:none;
-    border:none;
-    color:var(--muted);
-    font-size:15px;
-    padding:2px 6px;
-    cursor:pointer;
-    flex-shrink:0;
   }
   .lotto-card{
     background:linear-gradient(135deg, #1B1B1F 0%, #34292B 100%);
@@ -611,26 +766,32 @@ const DAY_DEFS = [
 
 let waitingList = [];   // 연맹원 명단
 let officerList = [];   // 알포 명단
-let weekSchedule = { weekKey: null, days: {} }; // 이번주 요일별 배정
+let weekSchedules = {}; // 주별 배정 { 'YYYY.MM.DD'(그 주 월요일): { days: {...} } }
 let completedMembers = []; // 완료 기록 [{id,date,day,pool,companionId,noShow}]
-let history = [];      // [{date, captainId, companionId, noShow}]
+let history = [];      // [{date, captainId, companionId}]
 let lottoHistory = []; // [{date, winners:[...]}]
 let violations = {};   // { memberId: count }
-let lottoDrawState = null;
+let lottoDrawState = null; // Firebase에 실시간으로 공유되는 추첨 진행 상태
 let isSpinning = false;
 let spinInterval = null;
 let spinDisplayName = '';
-let lastSeenDrawKey = null;
+let lastSeenDrawKey = null; // 당첨 결과가 갱신됐는지 감지용
 let confettiBurstNonce = 0;
 let lastError = null;
 let historyExpanded = true;
+let openAssignDay = null; // 'weekKey:dayKey' - 배정 드롭다운이 펼쳐진 대상
 let openMoveTarget = null; // 'waiting:아이디' 또는 'officer:아이디' - 이동 옵션이 펼쳐진 대상
+let openEditTarget = null; // 'waiting:아이디' 또는 'officer:아이디' - 이름 수정 입력창이 펼쳐진 대상
 let lottoExpanded = false;
 let visitCount = 0;
 const EDIT_PIN = 'mcnmcn77';
 let isUnlocked = false;
 let pinError = false;
 
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+}
 function pad2(n){ return String(n).padStart(2,'0'); }
 function fmtDate(d){
   return d.getFullYear() + '.' + pad2(d.getMonth()+1) + '.' + pad2(d.getDate());
@@ -643,14 +804,15 @@ function getMondayOfWeek(d){
   date.setDate(date.getDate() + diff);
   return date;
 }
-function currentWeekKey(){
-  return fmtDate(getMondayOfWeek(new Date()));
-}
-function dateForDayIndex(idx, weekOffset){ // 0=월 .. 6=일, weekOffset=0(이번주)/1(다음주)
+function weekKeyForOffset(offsetWeeks){ // 0=이번주, 1=다음주 (Firebase 키라서 '.' 대신 '-' 사용)
   const monday = getMondayOfWeek(new Date());
-  const d = new Date(monday);
-  d.setDate(d.getDate() + idx + (weekOffset || 0) * 7);
-  return d;
+  monday.setDate(monday.getDate() + offsetWeeks * 7);
+  return monday.getFullYear() + '-' + pad2(monday.getMonth()+1) + '-' + pad2(monday.getDate());
+}
+function dateForOffsetDayIndex(offsetWeeks, idx){ // 0=월 .. 6=일
+  const monday = getMondayOfWeek(new Date());
+  monday.setDate(monday.getDate() + offsetWeeks * 7 + idx);
+  return monday;
 }
 function todayDayIndex(){
   const jsDay = new Date().getDay(); // 0=Sun..6=Sat
@@ -658,7 +820,7 @@ function todayDayIndex(){
 }
 function monthStr(){
   const d = new Date();
-  return d.getFullYear() + '.' + pad2(d.getMonth()+1);
+  return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0');
 }
 
 function loadAll(){
@@ -671,8 +833,8 @@ function loadAll(){
     lastError = '불러오기 실패(명단): ' + err.message;
     render();
   });
-  db.ref('weekSchedule').on('value', snap => {
-    weekSchedule = snap.val() || { weekKey: null, days: {} };
+  db.ref('weekSchedules').on('value', snap => {
+    weekSchedules = snap.val() || {};
     render();
   }, err => {
     lastError = '불러오기 실패(스케줄): ' + err.message;
@@ -722,6 +884,7 @@ function loadAll(){
 }
 
 function recordVisit(){
+  // 새로고침/방문마다 딱 한 번만 카운트 (다른 값들과 별개로, 렌더링 때마다 증가하면 안 됨)
   db.ref('visitCount').transaction(current => (current || 0) + 1);
 }
 
@@ -753,9 +916,9 @@ async function saveRoster(){
   }
 }
 
-async function saveWeekSchedule(){
+async function saveWeekSchedules(){
   try{
-    await db.ref('weekSchedule').set(weekSchedule);
+    await db.ref('weekSchedules').set(weekSchedules);
   }catch(e){
     lastError = '저장 실패(스케줄): ' + (e && e.message ? e.message : String(e));
     render();
@@ -798,7 +961,7 @@ async function saveViolations(){
   }
 }
 
-function addPerson(listName, id){
+function addMember(listName, id){
   id = id.trim();
   if(!id) return;
   if(waitingList.includes(id) || officerList.includes(id)){
@@ -806,6 +969,36 @@ function addPerson(listName, id){
     return;
   }
   if(listName === 'officer'){ officerList.push(id); } else { waitingList.push(id); }
+  saveRoster();
+  render();
+}
+
+function removeMember(listName, idx){
+  const arr = listName === 'officer' ? officerList : waitingList;
+  const removedId = arr[idx];
+  arr.splice(idx, 1);
+  // 대기중(pending)인 배정에 이 사람이 있었다면 (이번주/다음주 포함) 그 배정도 같이 취소
+  const newSchedules = { ...weekSchedules };
+  let changed = false;
+  Object.keys(newSchedules).forEach(wk => {
+    const days = (newSchedules[wk] && newSchedules[wk].days) || {};
+    const newDays = { ...days };
+    let dayChanged = false;
+    Object.keys(newDays).forEach(k => {
+      if(newDays[k] && newDays[k].id === removedId && newDays[k].status === 'pending'){
+        delete newDays[k];
+        dayChanged = true;
+      }
+    });
+    if(dayChanged){
+      newSchedules[wk] = { ...newSchedules[wk], days: newDays };
+      changed = true;
+    }
+  });
+  if(changed){
+    weekSchedules = newSchedules;
+    saveWeekSchedules();
+  }
   saveRoster();
   render();
 }
@@ -830,24 +1023,66 @@ function movePersonTo(listName, personId, afterId){
   render();
 }
 
-function removePerson(listName, idx){
+// 이미 등록된 아이디의 이름을 고침 (오타 수정 등). 스케줄/완료기록/경고/기록까지 다 같이 바뀜
+function renamePerson(listName, oldId, newIdRaw){
+  const newId = (newIdRaw || '').trim();
+  if(!newId || newId === oldId){ openEditTarget = null; render(); return; }
+  if(waitingList.includes(newId) || officerList.includes(newId)){
+    alert('이미 있는 아이디예요.');
+    return;
+  }
   const arr = listName === 'officer' ? officerList : waitingList;
-  const removedId = arr[idx];
-  arr.splice(idx, 1);
-  // 이번주에 배정만 되고 아직 완료 전이었다면 배정도 같이 취소
-  const { wKey, days } = getEffectiveDays();
-  const newDays = { ...days };
-  let daysChanged = false;
-  Object.keys(newDays).forEach(k => {
-    if(newDays[k] && newDays[k].id === removedId && newDays[k].status === 'pending'){
-      delete newDays[k];
-      daysChanged = true;
+  const idx = arr.indexOf(oldId);
+  if(idx === -1) return;
+  arr[idx] = newId;
+
+  // 이번주/다음주 스케줄에 있던 배정도 이름 갱신
+  const newSchedules = { ...weekSchedules };
+  let schedChanged = false;
+  Object.keys(newSchedules).forEach(wk => {
+    const days = (newSchedules[wk] && newSchedules[wk].days) || {};
+    const newDays = { ...days };
+    let dayChanged = false;
+    Object.keys(newDays).forEach(k => {
+      if(newDays[k] && newDays[k].id === oldId){
+        newDays[k] = { ...newDays[k], id: newId };
+        dayChanged = true;
+      }
+    });
+    if(dayChanged){
+      newSchedules[wk] = { ...newSchedules[wk], days: newDays };
+      schedChanged = true;
     }
   });
-  if(daysChanged){
-    weekSchedule = { weekKey: wKey, days: newDays };
-    saveWeekSchedule();
+  if(schedChanged){
+    weekSchedules = newSchedules;
+    saveWeekSchedules();
   }
+
+  // 완료 기록 이름도 갱신
+  let completedChanged = false;
+  completedMembers = completedMembers.map(c => {
+    if(c.id === oldId){ completedChanged = true; return { ...c, id: newId }; }
+    return c;
+  });
+  if(completedChanged) saveCompleted();
+
+  // 최근 기록 이름도 갱신
+  let historyChanged = false;
+  history = history.map(h => {
+    if(h.captainId === oldId){ historyChanged = true; return { ...h, captainId: newId }; }
+    return h;
+  });
+  if(historyChanged) saveHistory();
+
+  // 경고 카운트도 이름 옮기기
+  if(violations[oldId]){
+    violations[newId] = (violations[newId] || 0) + violations[oldId];
+    delete violations[oldId];
+    saveViolations();
+  }
+
+  openEditTarget = null;
   saveRoster();
   render();
 }
@@ -880,79 +1115,76 @@ function deleteCompletedEntry(idx){
   render();
 }
 
-function getEffectiveDays(){
-  const wKey = currentWeekKey();
-  if(weekSchedule.weekKey === wKey && weekSchedule.days){
-    return { wKey, days: weekSchedule.days };
-  }
-  return { wKey, days: {} };
+function getWeekEntry(weekKey){
+  return weekSchedules[weekKey] || { days: {}, manualCleared: [] };
+}
+function getDaysForWeek(weekKey){
+  return getWeekEntry(weekKey).days || {};
 }
 
-// 명단 순서대로 비어있는 요일을 자동으로 채움 (추가 버튼 누르면 바로 반영되도록)
-function autoFillWeek(){
-  const { wKey, days } = getEffectiveDays();
+// 관리자가 직접 요일에 사람을 배정/변경
+function assignDay(weekKey, dayKey, personId){
+  if(!personId) return;
+  const entry = getWeekEntry(weekKey);
+  const existing = entry.days[dayKey];
+  if(existing && existing.status !== 'pending') return; // 완료된 요일은 변경 불가
+  const newDays = { ...entry.days, [dayKey]: { id: personId, status: 'pending', companionId: '' } };
+  weekSchedules = { ...weekSchedules, [weekKey]: { ...entry, days: newDays } };
+  openAssignDay = null;
+  saveWeekSchedules();
+  render();
+}
+
+// 배정 취소: 이 자리는 자동배정이 다시 채우지 않도록 표시해둠 (진짜로 비워두고 싶을 때)
+function unassignDay(weekKey, dayKey){
+  const entry = getWeekEntry(weekKey);
+  const existing = entry.days[dayKey];
+  if(!existing || existing.status !== 'pending') return;
+  const newDays = { ...entry.days };
+  delete newDays[dayKey];
+  const newManualCleared = Array.from(new Set([...(entry.manualCleared || []), dayKey]));
+  weekSchedules = { ...weekSchedules, [weekKey]: { days: newDays, manualCleared: newManualCleared } };
+  openAssignDay = null;
+  saveWeekSchedules();
+  render();
+}
+
+// 명단 순서대로 빈 요일을 자동으로 채움 (수동으로 비워둔 자리는 건드리지 않음)
+function autoFillWeek(weekKey, alreadyUsedIds){
+  const entry = getWeekEntry(weekKey);
+  const days = entry.days || {};
+  const manualCleared = entry.manualCleared || [];
+  const usedIds = new Set(alreadyUsedIds);
+  Object.values(days).forEach(d => { if(d) usedIds.add(d.id); });
   const newDays = { ...days };
-  const usedIds = new Set(Object.values(newDays).filter(Boolean).map(d => d.id));
-  let anyChange = false;
+  let changed = false;
   DAY_DEFS.forEach(def => {
-    if(newDays[def.key]) return; // 이미 배정(대기중이든 완료든) 되어있으면 건드리지 않음
+    if(newDays[def.key]) return; // 이미 배정됨
+    if(manualCleared.includes(def.key)) return; // 관리자가 일부러 비워둔 자리는 자동으로 안 채움
     const pool = def.pool === 'officer' ? officerList : waitingList;
     const candidate = pool.find(id => !usedIds.has(id));
     if(candidate){
       newDays[def.key] = { id: candidate, status: 'pending', companionId: '' };
       usedIds.add(candidate);
-      anyChange = true;
+      changed = true;
     }
   });
-  if(anyChange){
-    weekSchedule = { weekKey: wKey, days: newDays };
-    saveWeekSchedule();
+  if(changed){
+    weekSchedules = { ...weekSchedules, [weekKey]: { ...entry, days: newDays } };
   }
+  return usedIds; // 다음 주 자동배정에서 중복 방지용으로 재사용 가능
 }
 
-// 이번주가 계획대로 완료된다고 가정했을 때, 다음주에 누가 배정될지 미리 계산
-function computeNextWeekPreview(){
-  const { days: effectiveDays } = getEffectiveDays();
-  const waitingAssignedOrder = DAY_DEFS
-    .filter(d => d.pool === 'waiting')
-    .map(d => effectiveDays[d.key])
-    .filter(Boolean)
-    .map(info => info.id);
-  const officerAssignedOrder = DAY_DEFS
-    .filter(d => d.pool === 'officer')
-    .map(d => effectiveDays[d.key])
-    .filter(Boolean)
-    .map(info => info.id);
-
-  function simulateQueue(queue, assignedOrder){
-    const remaining = queue.filter(id => !assignedOrder.includes(id));
-    return remaining.concat(assignedOrder); // 이번주 배정자는 완료 후 맨 뒤로 간다고 가정
-  }
-
-  const simWaiting = simulateQueue(waitingList, waitingAssignedOrder);
-  const simOfficer = simulateQueue(officerList, officerAssignedOrder);
-
-  const nextDays = {};
-  const used = new Set();
-  DAY_DEFS.forEach(def => {
-    const pool = def.pool === 'officer' ? simOfficer : simWaiting;
-    const candidate = pool.find(id => !used.has(id));
-    if(candidate){
-      nextDays[def.key] = candidate;
-      used.add(candidate);
-    }
-  });
-  return nextDays;
-}
-
-function completeDay(dayKey, companionId, noShow){
-  const { wKey, days } = getEffectiveDays();
+function advance(weekKey, dayKey, companionId, noShow){
+  const entry = getWeekEntry(weekKey);
+  const days = entry.days;
   const info = days[dayKey];
   if(!info || !info.id) return;
   const personId = info.id;
   const dayIdx = DAY_DEFS.findIndex(d => d.key === dayKey);
   const def = DAY_DEFS[dayIdx];
-  const dateStr = fmtDate(dateForDayIndex(dayIdx));
+  const offsetWeeks = weekKey === weekKeyForOffset(1) ? 1 : 0;
+  const dateStr = fmtDate(dateForOffsetDayIndex(offsetWeeks, dayIdx));
 
   // 큐에서 빼서 맨 뒤에 다시 넣음 -> 순서가 다시 돌아옴
   if(def.pool === 'officer'){
@@ -985,10 +1217,10 @@ function completeDay(dayKey, companionId, noShow){
   }
 
   const newDays = { ...days, [dayKey]: { id: personId, status: noShow ? 'noshow' : 'done', companionId: (companionId || '').trim() } };
-  weekSchedule = { weekKey: wKey, days: newDays };
+  weekSchedules = { ...weekSchedules, [weekKey]: { ...entry, days: newDays } };
 
   saveRoster();
-  saveWeekSchedule();
+  saveWeekSchedules();
   saveCompleted();
   saveHistory();
   render();
@@ -1005,7 +1237,7 @@ function shuffledCopy(arr){
 
 function startDraw(count){
   if(isSpinning || (lottoDrawState && lottoDrawState.drawing)){
-    return;
+    return; // 이미 다른 사람이 추첨 중
   }
   const totalPool = waitingList.concat(officerList);
   if(totalPool.length === 0){
@@ -1065,11 +1297,11 @@ function render(){
   // 당첨자가 새로 갱신됐는지 감지해서 컨페티 연출 트리거
   const currentDrawKey = lottoHistory.length ? JSON.stringify(lottoHistory[0]) : null;
   if(lastSeenDrawKey === null){
-    lastSeenDrawKey = currentDrawKey;
+    lastSeenDrawKey = currentDrawKey; // 최초 로드시엔 조용히 기준만 잡음
   } else if(currentDrawKey !== lastSeenDrawKey){
     lastSeenDrawKey = currentDrawKey;
     confettiBurstNonce = Date.now() + 1500;
-    setTimeout(render, 1550);
+    setTimeout(render, 1550); // 연출 종료 후 자동으로 지워지도록
   }
   const showConfetti = confettiBurstNonce > Date.now();
   const confettiEmojis = ['🎉','🎊','✨','⭐','🚂'];
@@ -1081,81 +1313,112 @@ function render(){
     return `<span class="confetti-piece" style="left:${left}%; animation-delay:${delay}s; animation-duration:${duration}s;">${emoji}</span>`;
   }).join('') : '';
 
-  autoFillWeek(); // 명단 순서대로 빈 요일 자동 채우기
-  const { days: effectiveDays } = getEffectiveDays();
+  const thisWeekKey = weekKeyForOffset(0);
+  const nextWeekKey = weekKeyForOffset(1);
+  const scheduleBefore = weekSchedules;
+  let usedIdsAcc = new Set();
+  usedIdsAcc = autoFillWeek(thisWeekKey, usedIdsAcc); // 이번주 먼저 채우고
+  usedIdsAcc = autoFillWeek(nextWeekKey, usedIdsAcc);  // 다음주는 이번주 배정자를 제외한 다음 순번부터 이어서 채움
+  if(weekSchedules !== scheduleBefore){
+    saveWeekSchedules();
+  }
+  const thisWeekDays = getDaysForWeek(thisWeekKey);
   const todayIdx = todayDayIndex();
   const todayDef = DAY_DEFS[todayIdx];
-  const todayInfo = effectiveDays[todayDef.key];
+  const todayInfo = thisWeekDays[todayDef.key];
 
-  const scheduleRowsHtml = DAY_DEFS.map((def, idx) => {
-    const info = effectiveDays[def.key];
-    const dateLabel = fmtDate(dateForDayIndex(idx)).slice(5);
-    const poolLabel = def.pool === 'officer' ? '알포' : '연맹원';
-    let rightHtml;
-    if(info && info.id){
-      const isDone = info.status === 'done' || info.status === 'noshow';
-      rightHtml = `
-        <span class="sched-name">${escapeHtml(info.id)}</span>
-        ${info.status === 'noshow' ? `<span class="warn-badge">⚠️ 노쇼</span>` : (isDone ? `<span class="sched-done-badge">✓ 완료</span>` : '')}
-        ${info.companionId ? `<span style="color:var(--muted); font-size:12px;"> → ${escapeHtml(info.companionId)}</span>` : ''}
-        ${violations[info.id] ? `<span class="warn-badge">⚠️${violations[info.id]}</span>` : ''}
-        ${isUnlocked && !isDone ? `
-          <div class="sched-actions">
-            <input type="text" class="companion-mini" id="companion-${def.key}" placeholder="동행 아이디(선택)" />
-            <button class="btn-signal sched-btn" data-day="${def.key}" data-action="done">완료</button>
-            <button class="btn-ghost sched-btn" data-day="${def.key}" data-action="noshow" style="color:#A02C1F; border-color:#A02C1F;">노쇼</button>
+  function buildScheduleRowsHtml(weekKey, offsetWeeks){
+    const days = getDaysForWeek(weekKey);
+    const usedIdsThisWeek = new Set(Object.values(days).filter(Boolean).map(d => d.id));
+    return DAY_DEFS.map((def, idx) => {
+      const info = days[def.key];
+      const dateLabel = fmtDate(dateForOffsetDayIndex(offsetWeeks, idx)).slice(5);
+      const poolLabel = def.pool === 'officer' ? '알포' : '연맹원';
+      const isToday = offsetWeeks === 0 && idx === todayIdx;
+      const assignKey = `${weekKey}:${def.key}`;
+      let rightHtml;
+      let assignPanelHtml = '';
+      const isAssignOpen = openAssignDay === assignKey;
+
+      if(info && info.id){
+        const isDone = info.status === 'done' || info.status === 'noshow';
+        rightHtml = `
+          <span class="sched-name">${escapeHtml(info.id)}</span>
+          ${info.status === 'noshow' ? `<span class="warn-badge">⚠️ 노쇼</span>` : (isDone ? `<span class="sched-done-badge">✓ 완료</span>` : '')}
+          ${info.companionId ? `<span style="color:var(--muted); font-size:12px;"> → ${escapeHtml(info.companionId)}</span>` : ''}
+          ${violations[info.id] ? `<span class="warn-badge">⚠️${violations[info.id]}</span>` : ''}
+          ${isUnlocked && !isDone ? `
+            <div class="sched-actions">
+              <input type="text" class="companion-mini" id="companion-${weekKey}-${def.key}" placeholder="동행 아이디(선택)" />
+              <button class="btn-signal sched-btn" data-week="${weekKey}" data-day="${def.key}" data-action="done">완료</button>
+              <button class="btn-ghost sched-btn" data-week="${weekKey}" data-day="${def.key}" data-action="noshow" style="color:#A02C1F; border-color:#A02C1F;">노쇼</button>
+              <button class="btn-ghost sched-btn" data-week="${weekKey}" data-day="${def.key}" data-action="unassign">배정 취소</button>
+            </div>
+          ` : ''}
+        `;
+      } else {
+        rightHtml = isUnlocked
+          ? `<button class="btn-ghost sched-btn" data-week="${weekKey}" data-day="${def.key}" data-action="toggle">배정하기</button>`
+          : `<span class="empty-inline">미정</span>`;
+        if(isUnlocked && isAssignOpen){
+          const pool = def.pool === 'officer' ? officerList : waitingList;
+          const candidates = pool.filter(id => !usedIdsThisWeek.has(id));
+          assignPanelHtml = `
+            <div class="move-panel">
+              <p class="footnote" style="margin:0 0 6px; text-align:left;">${def.label}요일 담당(${poolLabel})을 선택해주세요</p>
+              <select class="assign-select" data-week="${weekKey}" data-day="${def.key}">
+                <option value="">-- ${poolLabel} 중에서 선택 --</option>
+                ${candidates.map(id => `<option value="${escapeHtml(id)}">${escapeHtml(id)}</option>`).join('')}
+              </select>
+              ${candidates.length === 0 ? `<p class="footnote" style="margin:6px 0 0; text-align:left;">지금 배정 안 된 ${poolLabel}가 없어요.</p>` : ''}
+            </div>
+          `;
+        }
+      }
+
+      return `
+        <div class="sched-row ${isToday ? 'today' : ''}">
+          <div class="sched-day">
+            <span class="sched-day-label">${def.label}${isToday ? ' <span class="today-tag">오늘</span>' : ''}</span>
+            <span class="sched-day-date">${dateLabel}</span>
+            <span class="sched-pool-tag ${def.pool}">${poolLabel}</span>
           </div>
-        ` : ''}
+          <div class="sched-right">${rightHtml}</div>
+        </div>
+        ${assignPanelHtml}
       `;
-    } else {
-      rightHtml = `<span class="empty-inline">미정 (${poolLabel} 명단 부족)</span>`;
-    }
+    }).join('');
+  }
 
-    return `
-      <div class="sched-row">
-        <div class="sched-day">
-          <span class="sched-day-label">${def.label}</span>
-          <span class="sched-day-date">${dateLabel}</span>
-          <span class="sched-pool-tag ${def.pool}">${poolLabel}</span>
-        </div>
-        <div class="sched-right">${rightHtml}</div>
-      </div>
-    `;
-  }).join('');
-
-  const nextWeekPreview = computeNextWeekPreview();
-  const nextWeekRowsHtml = DAY_DEFS.map((def, idx) => {
-    const personId = nextWeekPreview[def.key];
-    const dateLabel = fmtDate(dateForDayIndex(idx, 1)).slice(5);
-    const poolLabel = def.pool === 'officer' ? '알포' : '연맹원';
-    return `
-      <div class="sched-row">
-        <div class="sched-day">
-          <span class="sched-day-label">${def.label}</span>
-          <span class="sched-day-date">${dateLabel}</span>
-          <span class="sched-pool-tag ${def.pool}">${poolLabel}</span>
-        </div>
-        <div class="sched-right">
-          ${personId ? `<span class="sched-name" style="color:var(--muted);">${escapeHtml(personId)}</span>` : `<span class="empty-inline">미정 (${poolLabel} 명단 부족)</span>`}
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  const usedIdsThisWeek = new Set(Object.values(effectiveDays).filter(Boolean).map(d => d.id));
+  const thisWeekRowsHtml = buildScheduleRowsHtml(thisWeekKey, 0);
+  const nextWeekRowsHtml = buildScheduleRowsHtml(nextWeekKey, 1);
+  const thisWeekMonday = dateForOffsetDayIndex(0, 0);
+  const nextWeekMonday = dateForOffsetDayIndex(1, 0);
+  const usedIdsThisWeek = new Set(Object.values(thisWeekDays).filter(Boolean).map(d => d.id));
 
   function buildQueueRows(list, listName){
     return list.map((id, i) => {
       const isActive = usedIdsThisWeek.has(id);
       const isOpen = openMoveTarget === `${listName}:${id}`;
+      const isEditOpen = openEditTarget === `${listName}:${id}`;
       const options = list.filter(x => x !== id);
       return `
         <div class="queue-row ${isActive ? 'active-week' : ''}">
           <span class="queue-num">${i+1}</span>
           <span class="queue-name" ${isUnlocked ? `data-list="${listName}" data-id="${escapeHtml(id)}"` : ''} style="${isUnlocked ? 'cursor:pointer;' : ''}">${escapeHtml(id)}${isUnlocked ? ` <span class="caret">${isOpen ? '▾' : '▸'}</span>` : ''}</span>
           ${violations[id] ? `<span class="warn-badge">⚠️${violations[id]}</span>` : ''}
-          ${isUnlocked ? `<button class="pill-remove" data-list="${listName}" data-idx="${i}" title="삭제" style="margin-left:auto;">×</button>` : ''}
+          ${isUnlocked ? `<button class="edit-btn" data-list="${listName}" data-id="${escapeHtml(id)}" title="이름 수정" style="margin-left:auto;">✎</button>` : ''}
+          ${isUnlocked ? `<button class="pill-remove" data-list="${listName}" data-idx="${i}" title="삭제">×</button>` : ''}
         </div>
+        ${isEditOpen ? `
+          <div class="move-panel">
+            <p class="footnote" style="margin:0 0 6px; text-align:left;">아이디 수정 (오타 고치기 등)</p>
+            <div style="display:flex; gap:8px;">
+              <input type="text" class="edit-name-input" id="editname-${listName}-${escapeHtml(id)}" value="${escapeHtml(id)}" style="flex:1; border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-family:'IBM Plex Mono',monospace; font-size:13px;" />
+              <button class="btn-ghost edit-save-btn" data-list="${listName}" data-oldid="${escapeHtml(id)}">저장</button>
+            </div>
+          </div>
+        ` : ''}
         ${isOpen ? `
           <div class="move-panel">
             <p class="footnote" style="margin:0 0 6px; text-align:left;">${escapeHtml(id)}을(를) 어디로 옮길까요?</p>
@@ -1224,7 +1487,7 @@ function render(){
     `).join('')
     : '<div class="empty">아직 경고받은 사람이 없어요</div>';
 
-  const lottoRest = lottoHistory.slice(1);
+  const lottoRest = lottoHistory.slice(1); // 최신 1건은 위에서 이미 강조 표시
   const lottoHistHtml = lottoRest.length
     ? lottoRest.map(l => `
       <div class="lotto-history-item">
@@ -1235,7 +1498,6 @@ function render(){
     : '<div class="empty" style="color:rgba(255,255,255,0.5)">지난 기록이 없어요</div>';
 
   const lastWinners = lottoHistory.length ? lottoHistory[0].winners : null;
-  const lottoPoolSize = Math.max(waitingList.length + officerList.length, 1);
 
   app.innerHTML = `
     <header>
@@ -1249,30 +1511,32 @@ function render(){
       <span class="lock-icon">${isUnlocked ? '🔓' : '🔒'}</span>
       ${isUnlocked
         ? `<span class="status-label">수정 모드</span><span class="visit-count">👁 ${visitCount}</span><button class="btn-ghost" id="lockBtn" style="padding:6px 12px; font-size:12px;">잠그기</button>`
-        : `<input id="pinInput" type="password" placeholder="비밀번호 입력" /><span class="visit-count">👁 ${visitCount}</span><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
+        : `<input id="pinInput" type="password" placeholder="비밀번호 입력" /><button class="btn-ghost" id="unlockBtn" style="padding:6px 12px; font-size:12px;">잠금 해제</button>`
       }
     </div>
     ${pinError ? `<p class="pin-error" style="color:red;">땡!!!!</p>` : ''}
 
-    <div class="today-highlight">
+    <div class="today-card">
       <p class="label">오늘 (${todayDef.label}) 담당</p>
-      <p class="captain-id"><span class="train-glyph">🚂</span>${todayInfo && todayInfo.id ? escapeHtml(todayInfo.id) : '미정'}</p>
-      <p class="date">${fmtDate(dateForDayIndex(todayIdx))}</p>
+      <p class="captain-id"><span class="train-glyph">🚂</span>${todayInfo && todayInfo.id ? escapeHtml(todayInfo.id) : '미정'}${todayInfo && todayInfo.id && violations[todayInfo.id] ? `<span class="warn-badge" style="color:#FFB199;">⚠️${violations[todayInfo.id]}</span>` : ''}</p>
+      <p class="date">${fmtDate(dateForOffsetDayIndex(0, todayIdx))}</p>
     </div>
 
     <section class="card">
-      <h2>📅 이번주 스케줄 (월~일)</h2>
-      ${scheduleRowsHtml}
+      <h2>📅 이번주 스케줄 (${fmtDate(thisWeekMonday).slice(5)} ~ ${fmtDate(dateForOffsetDayIndex(0,6)).slice(5)})</h2>
+      <p class="footnote" style="margin:-8px 0 12px; text-align:left;"></p>
+      ${thisWeekRowsHtml}
     </section>
 
     <section class="card">
-      <h2>🔭 다음주 스케줄 미리보기</h2>
+      <h2>🔭 다음주 스케줄 (${fmtDate(nextWeekMonday).slice(5)} ~ ${fmtDate(dateForOffsetDayIndex(1,6)).slice(5)})</h2>
       <p class="footnote" style="margin:-8px 0 12px; text-align:left;"></p>
       ${nextWeekRowsHtml}
     </section>
 
     <section class="card">
       <h2>연맹원 명단 (${waitingList.length}명)</h2>
+      <p class="footnote" style="margin:-8px 0 12px; text-align:left;">주황색은 이번주 배정된 사람입니다.</p>
       ${waitingList.length ? `<div class="queue-list">${waitingPillsHtml}</div>` : '<div class="empty">아직 등록된 연맹원이 없습니다</div>'}
       ${isUnlocked ? `
         <div class="add-row">
@@ -1284,6 +1548,7 @@ function render(){
 
     <section class="card">
       <h2>알포 명단 (${officerList.length}명)</h2>
+      <p class="footnote" style="margin:-8px 0 12px; text-align:left;">주황색은 이번주 배정된 사람입니다.</p>
       ${officerList.length ? `<div class="queue-list">${officerPillsHtml}</div>` : '<div class="empty">아직 등록된 알포가 없습니다</div>'}
       ${isUnlocked ? `
         <div class="add-row">
@@ -1321,11 +1586,11 @@ function render(){
         </div>
       ` : (isUnlocked ? `
         <div class="lotto-controls">
-          <input id="lottoCount" type="number" min="1" max="${lottoPoolSize}" value="1" />
+          <input id="lottoCount" type="number" min="1" max="${Math.max(waitingList.length + officerList.length,1)}" value="1" />
           <button class="btn-gold" id="drawBtn" ${(waitingList.length + officerList.length) === 0 ? 'disabled' : ''}>추첨하기</button>
         </div>
       ` : `<p class="locked-note" style="color:rgba(255,255,255,0.45);">추첨은 R4만 가능합니다</p>`)}
-      <p class="footnote" style="color:rgba(255,255,255,0.45); margin:8px 0 12px;">한 번 당첨되면 다음 추첨부터 자동으로 제외됩니다. (연맹원+알포 전체 대상)</p>
+      <p class="footnote" style="color:rgba(255,255,255,0.45); margin:8px 0 12px;">한 번 당첨되면 다음 추첨부터 자동으로 제외됩니다.</p>
       ${lastWinners && !isSpinning ? `
         <p class="label" style="margin-bottom:6px;">가장 최근 당첨 (${escapeHtml(lottoHistory[0].date)})</p>
         <div class="winner-pills">${lastWinners.map(w => `<span class="winner-pill pop">${escapeHtml(w)}</span>`).join('')}</div>
@@ -1373,23 +1638,23 @@ function render(){
   });
   document.getElementById('addWaitingBtn')?.addEventListener('click', () => {
     const input = document.getElementById('newWaitingInput');
-    addPerson('waiting', input.value);
+    addMember('waiting', input.value);
     input.value = '';
   });
   document.getElementById('newWaitingInput')?.addEventListener('keydown', (e) => {
     if(e.key === 'Enter'){
-      addPerson('waiting', e.target.value);
+      addMember('waiting', e.target.value);
       e.target.value = '';
     }
   });
   document.getElementById('addOfficerBtn')?.addEventListener('click', () => {
     const input = document.getElementById('newOfficerInput');
-    addPerson('officer', input.value);
+    addMember('officer', input.value);
     input.value = '';
   });
   document.getElementById('newOfficerInput')?.addEventListener('keydown', (e) => {
     if(e.key === 'Enter'){
-      addPerson('officer', e.target.value);
+      addMember('officer', e.target.value);
       e.target.value = '';
     }
   });
@@ -1398,11 +1663,67 @@ function render(){
     const count = parseInt(countInput.value, 10) || 1;
     startDraw(count);
   });
+  app.querySelectorAll('.sched-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const weekKey = e.currentTarget.getAttribute('data-week');
+      const dayKey = e.currentTarget.getAttribute('data-day');
+      const action = e.currentTarget.getAttribute('data-action');
+      if(action === 'done' || action === 'noshow'){
+        const companionInput = document.getElementById(`companion-${weekKey}-${dayKey}`);
+        const companionVal = companionInput ? companionInput.value : '';
+        advance(weekKey, dayKey, companionVal, action === 'noshow');
+      } else if(action === 'toggle'){
+        const key = `${weekKey}:${dayKey}`;
+        openAssignDay = (openAssignDay === key) ? null : key;
+        render();
+      } else if(action === 'unassign'){
+        unassignDay(weekKey, dayKey);
+      }
+    });
+  });
+  app.querySelectorAll('.assign-select').forEach(sel => {
+    sel.addEventListener('change', (e) => {
+      const weekKey = e.currentTarget.getAttribute('data-week');
+      const dayKey = e.currentTarget.getAttribute('data-day');
+      const newId = e.currentTarget.value;
+      if(!newId) return;
+      assignDay(weekKey, dayKey, newId);
+    });
+  });
   app.querySelectorAll('.pill-remove').forEach(btn => {
     btn.addEventListener('click', (e) => {
       const idx = parseInt(e.currentTarget.getAttribute('data-idx'), 10);
       const listName = e.currentTarget.getAttribute('data-list');
-      removePerson(listName, idx);
+      removeMember(listName, idx);
+    });
+  });
+  app.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const listName = e.currentTarget.getAttribute('data-list');
+      const id = e.currentTarget.getAttribute('data-id');
+      const key = `${listName}:${id}`;
+      openEditTarget = (openEditTarget === key) ? null : key;
+      openMoveTarget = null;
+      render();
+    });
+  });
+  app.querySelectorAll('.edit-save-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const listName = e.currentTarget.getAttribute('data-list');
+      const oldId = e.currentTarget.getAttribute('data-oldid');
+      const input = document.getElementById(`editname-${listName}-${oldId}`);
+      renamePerson(listName, oldId, input ? input.value : '');
+    });
+  });
+  app.querySelectorAll('.edit-name-input').forEach(inp => {
+    inp.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter'){
+        const id = inp.id.replace('editname-', '');
+        const firstColon = id.indexOf('-');
+        const listName = id.slice(0, firstColon);
+        const oldId = id.slice(firstColon + 1);
+        renamePerson(listName, oldId, inp.value);
+      }
     });
   });
   app.querySelectorAll('.queue-name').forEach(el => {
@@ -1421,17 +1742,6 @@ function render(){
       const target = e.currentTarget.value;
       if(!target) return;
       movePersonTo(listName, id, target);
-    });
-  });
-  app.querySelectorAll('.sched-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const dayKey = e.currentTarget.getAttribute('data-day');
-      const action = e.currentTarget.getAttribute('data-action');
-      if(action === 'done' || action === 'noshow'){
-        const companionInput = document.getElementById(`companion-${dayKey}`);
-        const companionVal = companionInput ? companionInput.value : '';
-        completeDay(dayKey, companionVal, action === 'noshow');
-      }
     });
   });
   app.querySelectorAll('.reset-violation-btn').forEach(btn => {
